@@ -11,8 +11,14 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.smartman.redpaperhelper.entity.RedPaper;
+import com.smartman.redpaperhelper.entity.RedPaperItem;
 import com.smartman.redpaperhelper.utils.PrefsUtil;
+import com.smartman.redpaperhelper.xutils.DbUtils;
+import com.smartman.redpaperhelper.xutils.exception.DbException;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,6 +31,7 @@ public class RobPaperService extends AccessibilityService {
     public static final String Tag = "RobPaperService";
     public ClipboardManager clipboard;
     public static boolean isNotFromMoneyDetail = true;
+    private DbUtils db;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -83,6 +90,7 @@ public class RobPaperService extends AccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
+        db = DbUtils.create(getApplicationContext());
         Log.i(Tag, "onCreate");
     }
 
@@ -163,13 +171,16 @@ public class RobPaperService extends AccessibilityService {
     private void handleThanksWords() {
         AccessibilityNodeInfo PaperDetailInfo = getRootInActiveWindow();
         String thanksString = "";
+
+        //抢到谁的红包
+        List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw4");
         if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
-            List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw4");
-            thanksString += personInfo.get(0).getText();
+            thanksString += personInfo.get(0).getText().toString();
         }
+        //多大的红包
+        List<AccessibilityNodeInfo> moneyInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw8");
         if (PrefsUtil.loadPrefBoolean("reply_money", false)) {
-            List<AccessibilityNodeInfo> moneyInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw8");
-            thanksString += moneyInfo.get(0).getText();
+            thanksString += moneyInfo.get(0).getText().toString();
         }
         if (PrefsUtil.loadPrefBoolean("reply_words", false)) {
             thanksString += PrefsUtil.loadPrefString("thanks_words", "");
@@ -180,6 +191,40 @@ public class RobPaperService extends AccessibilityService {
         } else {
             List<AccessibilityNodeInfo> backInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fc");
             backInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+
+        //导入数据库
+        importDatabases(personInfo.get(0).getText().toString(),Double.valueOf(moneyInfo.get(0).getText().toString()));
+    }
+
+    private void importDatabases(String person ,double money)
+    {
+        Date date = new Date();
+        DateFormat df = DateFormat.getDateInstance(); //变成日期
+        String id = df.format(date);
+        RedPaper redPaper = new RedPaper();
+        redPaper.setDate(id);
+
+        RedPaper testPaper ;
+        try {
+            testPaper = db.findById(RedPaper.class,date);
+            if( testPaper == null)
+            {
+                db.save(redPaper);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
+        RedPaperItem redPaperItem = new RedPaperItem();
+        redPaperItem.setMoney(money);
+        redPaperItem.setPerson(person);
+        redPaperItem.parent = redPaper;
+
+        try {
+            db.saveBindingId(redPaperItem);
+        } catch (DbException e) {
+            e.printStackTrace();
         }
     }
 
