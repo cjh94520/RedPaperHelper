@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">红包神偷</string>
+    <string name="desc">开启红包神偷服务\n抢红包功能才能正常运作</string>
+
+    <string name="start">开启</string>
+    <string name="title_activity_setting">SettingActivity</string>
+
+
+    <!-- MainActivity -->
+    <string name="help">帮助>></string>
+    <string name="record">红包记录</string>
+    <string name="copyright">©Copryright 家辉</string>
+
+    <!-- Preference -->
+    <string name="function_start">抢红包</string>
+    <string name="setting">设置</string>
+
+
+    <!-- Dialog -->
+    <string name="dialog_title">请开启[红包神偷]辅助服务</string>
+    <string name="dialog_context">开启"辅助功能"可支持红包神偷抢红包自动抢和自动回复功能，为了更好更快地抢红包，请务必去开启辅助服务</string>
+    <string name="dialog_start">去开启</string>
+
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.smartman.redpaperhelper"
+    android:versionCode="1"
+    android:versionName="1.5" >
+
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="21" />
+    <application
+        android:name=".application.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:persistent="true">
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.RobPaperService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            <intent-filter android:priority="1000" >
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility" />
+        </service>
+
+        <activity
+            android:name=".activity.SettingActivity"
+            android:label="@string/title_activity_setting">
+        </activity>
+    </application>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"></uses-permission>
+</manifest>
