@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,15 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartman.redpaperhelper.R;
-import com.smartman.redpaperhelper.entity.RedPaper;
 import com.smartman.redpaperhelper.ui.ServiceAlertDialog;
 import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
 import com.smartman.redpaperhelper.utils.PrefsUtil;
-import com.smartman.redpaperhelper.xutils.DbUtils;
-import com.smartman.redpaperhelper.xutils.exception.DbException;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 public class MainActivity extends Activity {
 
@@ -50,7 +43,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(),SettingActivity.class);
+                intent.setClass(getApplicationContext(), SettingActivity.class);
                 startActivity(intent);
             }
         });
@@ -62,42 +55,6 @@ public class MainActivity extends Activity {
                 dialog = new ServiceAlertDialog(MainActivity.this);
             }
         });
-
-
-
-        //测试xutils.db
-        DbUtils db = DbUtils.create(this);
-
-        RedPaper redPaper = new RedPaper();
-
-        try {
-            db.dropTable(RedPaper.class);
-        } catch (DbException e) {
-            e.printStackTrace();
-            Log.i(TAG, e.getMessage());
-        }
-
-        redPaper.setMoney(1.3);
-        redPaper.setPerson("Li");
-        Date date = new Date();
-        DateFormat df1 = DateFormat.getDateInstance();//日期格式，精确到日
-        Log.i(TAG, df1.format(date));
-        redPaper.setDate(date);
-        try {
-            db.save(redPaper);
-        } catch (DbException e) {
-            e.printStackTrace();
-            Log.i(TAG,e.getMessage());
-        }
-
-        try {
-            RedPaper other = db.findById(RedPaper.class,date);
-           // Log.i(TAG,other.getPerson());
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
     @Override

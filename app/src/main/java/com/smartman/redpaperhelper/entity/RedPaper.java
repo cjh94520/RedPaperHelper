@@ -1,9 +1,10 @@
 package com.smartman.redpaperhelper.entity;
 
-import com.smartman.redpaperhelper.xutils.db.annotation.Column;
+import com.smartman.redpaperhelper.xutils.db.annotation.Finder;
+import com.smartman.redpaperhelper.xutils.db.annotation.Id;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jiahui.chen on 2015/10/27.
@@ -11,47 +12,26 @@ import java.util.Date;
 public class RedPaper implements Serializable{
     private static final long serialVersionUID = 6721872944896314037L;
 
-    private int id;
+    @Id
+    private String date;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Column(column = "date")
-    private Date date;
-
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    @Column(column = "money")
-    private double money;
+    @Finder(valueColumn = "date", targetColumn = "parentId")
+    private List<RedPaperItem> data;
 
-    @Column(column = "person")
-    private String person;
-
-
-    public double getMoney() {
-        return money;
+    public List<RedPaperItem> getData() {
+        return data;
     }
 
-    public String getPerson() {
-        return person;
+    public void setData(List<RedPaperItem> data) {
+        this.data = data;
     }
 
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public void setPerson(String person) {
-        this.person = person;
-    }
 }
