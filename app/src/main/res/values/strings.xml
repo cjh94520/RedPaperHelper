@@ -7,7 +7,7 @@
     <!-- MainActivity -->
     <string name="help">帮助>></string>
     <string name="record">红包记录</string>
-    <string name="copyright">©Copryright 家辉</string>
+    <string name="copyright">©Copryright</string>
 
     <!-- Preference -->
     <string name="function_start">抢红包</string>
