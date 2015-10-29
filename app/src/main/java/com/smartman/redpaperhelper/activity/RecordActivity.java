@@ -44,7 +44,12 @@ public class RecordActivity extends Activity {
      * 初始化可拓展列表
      */
     private void initExpandListView() throws DbException {
-        statusAdapter = new StatusExpandAdapter(context, getListData());
+        List<RedPaper> list = getListData();
+        if( list == null )
+        {
+            return;
+        }
+        statusAdapter = new StatusExpandAdapter(context, list);
         expandlistView.setAdapter(statusAdapter);
         expandlistView.setGroupIndicator(null); // 去掉默认带的箭头
         expandlistView.setSelection(0);// 设置默认选中项
