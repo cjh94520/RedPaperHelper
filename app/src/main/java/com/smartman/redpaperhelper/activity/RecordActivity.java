@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ExpandableListView;
 
+import com.baidu.mobstat.StatService;
 import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.adapter.StatusExpandAdapter;
 import com.smartman.redpaperhelper.entity.RedPaper;
@@ -75,5 +76,19 @@ public class RecordActivity extends Activity {
         List<RedPaper> groupList;
         groupList = db.findAll(RedPaper.class);
         return groupList;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //开启百度统计
+        StatService.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //关闭百度统计
+        StatService.onPause(this);
     }
 }

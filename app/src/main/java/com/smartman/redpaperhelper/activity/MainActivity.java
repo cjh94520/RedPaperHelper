@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.mobstat.StatService;
 import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.ui.ServiceAlertDialog;
 import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
@@ -84,5 +85,14 @@ public class MainActivity extends Activity {
             PrefsUtil.savePrefBoolean("FIRST_IN",false);
         }
 
+        //开启百度统计
+        StatService.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //关闭百度统计
+        StatService.onPause(this);
     }
 }

@@ -7,7 +7,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -48,7 +47,6 @@ public class RobPaperService extends AccessibilityService {
                         String text = String.valueOf(t);
                         if (text.contains("[微信红包]"))  //通知栏某通知有信息包含[微信红包]
                         {
-                            Log.i(Tag, "检测到通知栏，进入UI");
                             gotoWeCharUI(event);
                             isFromNotification = true;
                         }
@@ -59,13 +57,11 @@ public class RobPaperService extends AccessibilityService {
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:    //进入微信界面
                 if( isFromNotification ) {
                     String className = event.getClassName().toString();
-                    Log.i(Tag, "当前的ClassName" + className);
                     if (className.equals("com.tencent.mm.ui.LauncherUI")) {
                         if (isNotFromMoneyDetail) {
                             //先停顿再抢
                             getPacket();
                         } else {
-                            Log.i(Tag, "isFromMoneyDetail");
                             isNotFromMoneyDetail = true;
                             isFromNotification = false;
                             replyThanksWords();
@@ -91,19 +87,16 @@ public class RobPaperService extends AccessibilityService {
     public void onCreate() {
         super.onCreate();
         db = DbUtils.create(getApplicationContext());
-        Log.i(Tag, "onCreate");
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(Tag, "onStartCommand");
         return super.onStartCommand(intent, START_STICKY, startId);
     }
 
     @Override
     public void onDestroy() {
-        Log.i(Tag, Tag + "is onDestory");
         super.onDestroy();
     }
 
@@ -142,12 +135,9 @@ public class RobPaperService extends AccessibilityService {
 
         List<AccessibilityNodeInfo> list = rootNode.findAccessibilityNodeInfosByText("领取红包");
         if (list != null && list.size() != 0) {
-            Log.i(Tag, list.size() + "");
-            Log.i(Tag, list.get(0).getClassName().toString());
             int size = list.size();
             AccessibilityNodeInfo info = list.get(size - 1);
             if (info != null && info.getParent() != null) {
-                Log.i(Tag, list.get(0).getParent().getClassName().toString());
                 list.get(list.size() - 1).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
@@ -185,7 +175,6 @@ public class RobPaperService extends AccessibilityService {
         if (PrefsUtil.loadPrefBoolean("reply_words", false)) {
             thanksString += PrefsUtil.loadPrefString("thanks_words", "");
         }
-        Log.i(Tag,"准备按click back");
         isNotFromMoneyDetail = false;
         List<AccessibilityNodeInfo> backInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fc");
         backInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -230,7 +219,6 @@ public class RobPaperService extends AccessibilityService {
 
     private void replyThanksWords() {
         if (thanksString.equals("")) {
-            Log.i(Tag, "record1");
             gotoRecordActivity();
             return;
         }
@@ -264,7 +252,6 @@ public class RobPaperService extends AccessibilityService {
                 //重新置空
                 thanksString  = "";
 
-                Log.i(Tag,"record2");
                 gotoRecordActivity();
             }
         } catch (Exception ex) {

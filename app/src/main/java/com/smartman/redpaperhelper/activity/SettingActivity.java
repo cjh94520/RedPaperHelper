@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.MenuItem;
 
+import com.baidu.mobstat.StatService;
 import com.smartman.redpaperhelper.fragment.SettingFragment;
 import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
@@ -73,6 +74,15 @@ public class SettingActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        //开启百度统计
+        StatService.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //关闭百度统计
+        StatService.onPause(this);
     }
 
     @Override
@@ -86,4 +96,6 @@ public class SettingActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
