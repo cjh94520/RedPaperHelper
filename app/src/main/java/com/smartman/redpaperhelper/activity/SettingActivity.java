@@ -40,9 +40,7 @@ public class SettingActivity extends Activity {
         fragmentTransaction.commit();
 
         //设置switch-抢红包
-        setSwitch();
-
-        setLock();
+       // setSwitch();
     }
 
     private void setLock()
@@ -53,7 +51,7 @@ public class SettingActivity extends Activity {
         final KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("MyKeyguardLock");
         keyguardLock.disableKeyguard();
 
-        //保持常量
+        //保持常亮
         PowerManager.WakeLock m_wklk;
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK,"cn");

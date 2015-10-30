@@ -26,10 +26,10 @@ import java.util.List;
  */
 public class RobPaperService extends AccessibilityService {
 
-    public static final String Tag = "RobPaperService";
+    public static final String TAG = "RobPaperService";
     public ClipboardManager clipboard;
-    public static boolean isNotFromMoneyDetail = true;
-    public static boolean isFromNotification = false;
+    public boolean isNotFromMoneyDetail = true;
+    public boolean isFromNotification = false;
     private DbUtils db;
     private String thanksString = "";
 
@@ -273,4 +273,5 @@ public class RobPaperService extends AccessibilityService {
         intent.setClass(getApplicationContext(), RecordActivity.class);
         startActivity(intent);
     }
+
 }

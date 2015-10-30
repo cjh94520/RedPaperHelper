@@ -2,7 +2,7 @@
     <string name="app_name">红包神偷</string>
     <string name="desc">开启红包神偷服务\n抢红包功能才能正常运作</string>
 
-    <string name="start">开启</string>
+    <string name="start">启动服务</string>
 
     <!-- MainActivity -->
     <string name="help">帮助>></string>

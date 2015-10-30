@@ -6,7 +6,8 @@
     <ImageView
         android:id="@+id/test"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:src="@anim/cat_anim"/>
 
 
     <ImageView
@@ -16,7 +17,7 @@
         android:layout_alignRight="@id/test"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:src="@drawable/icon_setting" />
+        android:src="@drawable/setting" />
 
     <TextView
         android:id="@+id/help"
@@ -28,7 +29,8 @@
         android:layout_marginLeft="10dp"
         android:clickable="true"
         android:text="@string/help"
-        android:textSize="16sp" />
+        android:textColor="#a61e1e"
+        android:textSize="20sp" />
 
 
     <TextView
@@ -39,7 +41,9 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="10dp"
         android:alpha="0.6"
-        android:text="@string/copyright" />
+        android:text="@string/copyright"
+        android:textSize="20sp"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/record"
@@ -51,20 +55,23 @@
         android:layout_marginRight="10dp"
         android:clickable="true"
         android:text="@string/record"
-        android:textSize="16sp" />
+        android:textColor="#a61e1e"
+        android:textSize="20sp" />
 
 
     <RelativeLayout
+        android:id="@+id/start"
         android:layout_above="@+id/record"
-        android:layout_marginLeft="135dp"
-        android:layout_marginBottom="15dp"
-        android:layout_width="130dp"
-        android:layout_height="100dp">
-        <Button
-            android:id="@+id/start"
+        android:layout_marginLeft="110dp"
+        android:layout_marginBottom="25dp"
+        android:layout_width="140dp"
+        android:layout_height="130dp">
+        <TextView
+            android:id="@+id/start_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start"
+            android:textSize="25sp"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 

@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.mobstat.StatService;
@@ -20,17 +22,19 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
 
-    private Button startButton;
+    private TextView start_text;
+    private RelativeLayout startButton;
     private ImageView setView;
     private TextView helpView;
     private TextView recordView;
     private ServiceAlertDialog dialog;
+    private ImageView settingView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        startButton = (Button) findViewById(R.id.start);
+        startButton = (RelativeLayout) findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +69,15 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        start_text = (TextView)findViewById(R.id.start_text);
+
+        settingView = (ImageView)findViewById(R.id.setting);
+        Animation operatingAnim = AnimationUtils.loadAnimation(this, R.anim.setting_anim);
+        LinearInterpolator lin = new LinearInterpolator();
+        operatingAnim.setInterpolator(lin);
+        settingView.startAnimation(operatingAnim);
+
     }
 
     @Override
@@ -72,11 +85,11 @@ public class MainActivity extends Activity {
         super.onResume();
         boolean isOnService = AccessibilityServiceUtil.isAccessibilitySettingsOn(getApplicationContext());
         if (!isOnService) {
-            startButton.setText("启动服务");
-            startButton.setEnabled(true);
+            start_text.setText("启动服务");
+            start_text.setEnabled(true);
         } else {
-            startButton.setText("服务正在运行");
-            startButton.setEnabled(false);
+            start_text.setText("运行中");
+            start_text.setEnabled(false);
         }
         Boolean isFirstIn = PrefsUtil.loadPrefBoolean("FIRST_IN", true);
         if(isFirstIn)
