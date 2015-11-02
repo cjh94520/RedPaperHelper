@@ -145,7 +145,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter {
             viewHolder.words = (TextView) convertView
                     .findViewById(R.id.words);
         }
-        String thanks_words = "抢到" + entity.getPerson() + entity.getMoney();
+        String thanks_words = "抢到" + entity.getPerson() + "的红包: " + entity.getMoney() + "元";
         viewHolder.words.setText(thanks_words);
 
         convertView.setTag(viewHolder);

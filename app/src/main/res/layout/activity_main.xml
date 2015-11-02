@@ -1,4 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background">
@@ -8,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@anim/cat_anim"/>
-
 
     <ImageView
         android:id="@+id/setting"
@@ -21,12 +23,13 @@
 
     <TextView
         android:id="@+id/help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_alignBottom="@id/test"
         android:layout_alignLeft="@id/test"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
+        app:layout_heightPercent="5.5%"
+        app:layout_widthPercent="19%"
+        app:layout_marginLeftPercent="2%"
         android:clickable="true"
         android:text="@string/help"
         android:textColor="#a61e1e"
@@ -35,37 +38,40 @@
 
     <TextView
         android:id="@+id/copyright"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_heightPercent="5.5%"
+        app:layout_widthPercent="25%"
         android:layout_alignBottom="@id/test"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="10dp"
         android:alpha="0.6"
         android:text="@string/copyright"
         android:textSize="20sp"
         android:visibility="invisible"/>
 
+
     <TextView
         android:id="@+id/record"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_heightPercent="5.5%"
+        app:layout_widthPercent="25%"
         android:layout_alignBottom="@id/test"
         android:layout_alignRight="@id/test"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
         android:clickable="true"
         android:text="@string/record"
         android:textColor="#a61e1e"
         android:textSize="20sp" />
 
-
     <RelativeLayout
         android:id="@+id/start"
-        android:layout_above="@+id/record"
-        android:layout_marginLeft="110dp"
-        android:layout_marginBottom="25dp"
-        android:layout_width="140dp"
-        android:layout_height="130dp">
+        android:layout_above="@+id/copyright"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_heightPercent="21%"
+        app:layout_widthPercent="39%"
+        app:layout_marginLeftPercent="31%"
+        app:layout_marginBottomPercent="3%">
         <TextView
             android:id="@+id/start_text"
             android:layout_width="wrap_content"
@@ -75,4 +81,4 @@
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 
-</RelativeLayout>
+</android.support.percent.PercentRelativeLayout>

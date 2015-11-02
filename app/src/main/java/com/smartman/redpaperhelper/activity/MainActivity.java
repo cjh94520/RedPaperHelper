@@ -1,9 +1,13 @@
 package com.smartman.redpaperhelper.activity;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -30,9 +34,14 @@ public class MainActivity extends Activity {
     private ServiceAlertDialog dialog;
     private ImageView settingView;
 
+    public static MainActivity mInstance;
+    KeyguardManager.KeyguardLock keyguardLock;
+    PowerManager.WakeLock m_wklk;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mInstance = this;
         setContentView(R.layout.activity_main);
         startButton = (RelativeLayout) findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +87,7 @@ public class MainActivity extends Activity {
         operatingAnim.setInterpolator(lin);
         settingView.startAnimation(operatingAnim);
 
+        setLockOrNot();
     }
 
     @Override
@@ -107,5 +117,37 @@ public class MainActivity extends Activity {
         super.onPause();
         //关闭百度统计
         StatService.onPause(this);
+    }
+
+    private void setLockOrNot()
+    {
+        Boolean isOpen = PrefsUtil.loadPrefBoolean("lock_open", false);
+        if(isOpen)
+        {
+
+            setLock();
+        }
+    }
+
+    public void setLock()
+    {
+
+        //解除锁屏
+        KeyguardManager keyguardManager = (KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE);
+        keyguardLock = keyguardManager.newKeyguardLock("MyKeyguardLock");
+        keyguardLock.disableKeyguard();
+
+        Log.i(TAG, "setLock");
+        //保持常亮
+        PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK,"cn");
+        m_wklk.acquire();
+    }
+
+    public void releaseLock()
+    {
+        Log.i(TAG,"releaseLock");
+        m_wklk.release();
+        keyguardLock.reenableKeyguard();
     }
 }

@@ -11,9 +11,12 @@ import com.baidu.mobstat.StatService;
 import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.adapter.StatusExpandAdapter;
 import com.smartman.redpaperhelper.entity.RedPaper;
+import com.smartman.redpaperhelper.entity.RedPaperItem;
 import com.smartman.redpaperhelper.xutils.DbUtils;
 import com.smartman.redpaperhelper.xutils.exception.DbException;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,8 +37,39 @@ public class RecordActivity extends Activity {
         db = DbUtils.create(this);
         context = this;
         expandlistView = (ExpandableListView) findViewById(R.id.expandlist);
-        try {
+                try {
             initExpandListView();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void importDatabases(String person ,double money)
+    {
+        Date date = new Date();
+        DateFormat df = DateFormat.getDateInstance(); //变成日期
+        String id = df.format(date);
+        RedPaper redPaper = new RedPaper();
+        redPaper.setDate(id);
+
+        RedPaper testPaper ;
+        try {
+            testPaper = db.findById(RedPaper.class,date);
+            if( testPaper == null)
+            {
+                db.save(redPaper);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
+        RedPaperItem redPaperItem = new RedPaperItem();
+        redPaperItem.setMoney(money);
+        redPaperItem.setPerson(person);
+        redPaperItem.parent = redPaper;
+
+        try {
+            db.saveBindingId(redPaperItem);
         } catch (DbException e) {
             e.printStackTrace();
         }

@@ -1,8 +1,11 @@
 package com.smartman.redpaperhelper.fragment;
 
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
@@ -10,6 +13,7 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.smartman.redpaperhelper.R;
+import com.smartman.redpaperhelper.activity.MainActivity;
 import com.smartman.redpaperhelper.application.MyApplication;
 import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
 import com.smartman.redpaperhelper.utils.PrefsUtil;
@@ -22,7 +26,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     private EditTextPreference editTextPreference;
     private SwitchPreference switchPreference;
     private Boolean notGoSetting = false;
-
+    KeyguardManager.KeyguardLock keyguardLock;
+    PowerManager.WakeLock m_wklk;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,9 +84,25 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
                 }
                 break;
             case "lock_open":
-                if( getActivity().getApplication() != null ) {
-                    Log.i(TAG,"getApplication存在");
-                    ( (MyApplication)getActivity().getApplication()).setLock();
+                if( PrefsUtil.loadPrefBoolean("lock_open",false) ) {
+                    if( MainActivity.mInstance !=null )
+                    {
+                        MainActivity.mInstance.setLock();
+                    }
+                    else
+                    {
+                        setLock();
+                    }
+                }
+                else {
+                    if( MainActivity.mInstance !=null )
+                    {
+                        MainActivity.mInstance.releaseLock();
+                    }
+                    else
+                    {
+                        releaseLock();
+                    }
                 }
                 break;
             case "reply_money":
@@ -107,5 +128,27 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             default:
                 break;
         }
+    }
+
+    public void setLock()
+    {
+
+        //解除锁屏
+        KeyguardManager keyguardManager = (KeyguardManager)getActivity().getSystemService(Context.KEYGUARD_SERVICE);
+        keyguardLock = keyguardManager.newKeyguardLock("MyKeyguardLock");
+        keyguardLock.disableKeyguard();
+
+        Log.i(TAG, "setLock");
+        //保持常亮
+        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+        m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK,"cn");
+        m_wklk.acquire();
+    }
+
+    public void releaseLock()
+    {
+        Log.i(TAG,"releaseLock");
+        m_wklk.release();
+        keyguardLock.reenableKeyguard();
     }
 }

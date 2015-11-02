@@ -8,6 +8,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.baidu.mobstat.StatService;
@@ -17,7 +18,7 @@ import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
 import com.smartman.redpaperhelper.utils.PrefsUtil;
 
 public class SettingActivity extends Activity {
-
+    PowerManager.WakeLock m_wklk;
     private static final String TAG = "SettingActivity";
 
     @Override
@@ -43,20 +44,25 @@ public class SettingActivity extends Activity {
        // setSwitch();
     }
 
-    private void setLock()
+    public void setLock()
     {
 
-        //解除锁屏
-        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        final KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("MyKeyguardLock");
-        keyguardLock.disableKeyguard();
+//        //解除锁屏
+//        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+//        final KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("MyKeyguardLock");
+//        keyguardLock.disableKeyguard();
 
         //保持常亮
-        PowerManager.WakeLock m_wklk;
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK,"cn");
         m_wklk.acquire();
     }
+
+    public void releaseLock()
+    {
+        m_wklk.release();
+    }
+
 
 
     private void setSwitch()
