@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -32,7 +33,7 @@ public class MainActivity extends Activity {
     private TextView helpView;
     private TextView recordView;
     private ServiceAlertDialog dialog;
-    private ImageView settingView;
+    private ImageView catView;
 
     public static MainActivity mInstance;
     KeyguardManager.KeyguardLock keyguardLock;
@@ -81,13 +82,25 @@ public class MainActivity extends Activity {
 
         start_text = (TextView)findViewById(R.id.start_text);
 
-        settingView = (ImageView)findViewById(R.id.setting);
+        setView = (ImageView)findViewById(R.id.setting);
         Animation operatingAnim = AnimationUtils.loadAnimation(this, R.anim.setting_anim);
         LinearInterpolator lin = new LinearInterpolator();
         operatingAnim.setInterpolator(lin);
-        settingView.startAnimation(operatingAnim);
+        setView.startAnimation(operatingAnim);
+
+        catView = (ImageView)findViewById(R.id.test);
 
         setLockOrNot();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(catView!=null)
+        {
+            AnimationDrawable animationDrawable = (AnimationDrawable)catView.getDrawable();
+            animationDrawable.start();
+        }
     }
 
     @Override

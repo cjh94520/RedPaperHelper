@@ -107,14 +107,6 @@ public class RobPaperService extends AccessibilityService {
             PendingIntent pendingIntent = notification.contentIntent;
             try {
                 pendingIntent.send(); //点击通知栏信息
-//                TimerTask timerTask = new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        getPacket();
-//                    }
-//                };
-//                Timer timer = new Timer();
-//                timer.schedule(timerTask, 500);
                 getPacket();
 
             } catch (PendingIntent.CanceledException ex) {

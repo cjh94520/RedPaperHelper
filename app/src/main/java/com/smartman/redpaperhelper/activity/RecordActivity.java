@@ -1,10 +1,11 @@
 package com.smartman.redpaperhelper.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ExpandableListView;
 
 import com.baidu.mobstat.StatService;
@@ -32,16 +33,16 @@ public class RecordActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_record);
-        db = DbUtils.create(this);
-        context = this;
-        expandlistView = (ExpandableListView) findViewById(R.id.expandlist);
-                try {
-            initExpandListView();
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
+
+        //设置action bar
+        ActionBar actionBar = getActionBar();
+        actionBar.show();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.record);
+        actionBar.setDisplayShowHomeEnabled(false);
+
     }
 
     private void importDatabases(String person ,double money)
@@ -117,6 +118,16 @@ public class RecordActivity extends Activity {
         super.onResume();
         //开启百度统计
         StatService.onResume(this);
+
+        //导入数据
+        db = DbUtils.create(this);
+        context = this;
+        expandlistView = (ExpandableListView) findViewById(R.id.expandlist);
+        try {
+            initExpandListView();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -124,5 +135,17 @@ public class RecordActivity extends Activity {
         super.onPause();
         //关闭百度统计
         StatService.onPause(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id)
+        {
+            case android.R.id.home :
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

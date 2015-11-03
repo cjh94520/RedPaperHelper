@@ -30,6 +30,7 @@
         app:layout_heightPercent="5.5%"
         app:layout_widthPercent="19%"
         app:layout_marginLeftPercent="2%"
+        app:layout_marginBottomPercent="0.2%"
         android:clickable="true"
         android:text="@string/help"
         android:textColor="#a61e1e"
@@ -56,6 +57,7 @@
         android:layout_height="0dp"
         app:layout_heightPercent="5.5%"
         app:layout_widthPercent="25%"
+        app:layout_marginBottomPercent="0.2%"
         android:layout_alignBottom="@id/test"
         android:layout_alignRight="@id/test"
         android:clickable="true"
@@ -71,7 +73,7 @@
         app:layout_heightPercent="21%"
         app:layout_widthPercent="39%"
         app:layout_marginLeftPercent="31%"
-        app:layout_marginBottomPercent="3%">
+        app:layout_marginBottomPercent="4%">
         <TextView
             android:id="@+id/start_text"
             android:layout_width="wrap_content"
