@@ -4,4 +4,5 @@
     <color name="head_line_bg">#cccccc</color>
     <color name="time_line_bg">#b3b3b3</color>
     <color name="white">#FFffffff</color>
+    <color name="red">#f50a0a</color>
 </resources>

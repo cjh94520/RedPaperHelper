@@ -3,9 +3,6 @@
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
-    <style name="MyPrederence" >
-        <item name="android:background">#84ec1c</item>
-    </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">#d1160d</item>
@@ -35,5 +32,4 @@
         <item name="android:paddingRight">24dp</item>
         <item name="android:paddingStart">24dp</item>
         <item name="android:paddingTop">20dp</item>
-    </style>
-</resources>
+    </style></resources>

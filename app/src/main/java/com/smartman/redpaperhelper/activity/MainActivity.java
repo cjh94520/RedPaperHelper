@@ -5,6 +5,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -18,10 +19,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.mobstat.StatService;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.ui.ServiceAlertDialog;
 import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
 import com.smartman.redpaperhelper.utils.PrefsUtil;
+import com.smartman.redpaperhelper.utils.SystemBarUtil;
 
 public class MainActivity extends Activity {
 
@@ -44,6 +47,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         mInstance = this;
         setContentView(R.layout.activity_main);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarUtil.setTranslucentStatus(this, true);
+        }
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+
+        tintManager.setStatusBarTintEnabled(true);
+
+         // 使用颜色资源
+        tintManager.setStatusBarTintResource(R.color.red);
+
         startButton = (RelativeLayout) findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override

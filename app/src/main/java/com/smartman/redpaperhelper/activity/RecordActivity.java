@@ -3,16 +3,19 @@ package com.smartman.redpaperhelper.activity;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 
 import com.baidu.mobstat.StatService;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.adapter.StatusExpandAdapter;
 import com.smartman.redpaperhelper.entity.RedPaper;
 import com.smartman.redpaperhelper.entity.RedPaperItem;
+import com.smartman.redpaperhelper.utils.SystemBarUtil;
 import com.smartman.redpaperhelper.xutils.DbUtils;
 import com.smartman.redpaperhelper.xutils.exception.DbException;
 
@@ -33,8 +36,15 @@ public class RecordActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_record);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarUtil.setTranslucentStatus(this, true);
+        }
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        // 使用颜色资源
+        tintManager.setStatusBarTintResource(R.color.red);
 
         //设置action bar
         ActionBar actionBar = getActionBar();

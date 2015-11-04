@@ -4,18 +4,16 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.KeyguardManager;
-import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.baidu.mobstat.StatService;
-import com.smartman.redpaperhelper.fragment.SettingFragment;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.smartman.redpaperhelper.R;
-import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
-import com.smartman.redpaperhelper.utils.PrefsUtil;
+import com.smartman.redpaperhelper.fragment.SettingFragment;
+import com.smartman.redpaperhelper.utils.SystemBarUtil;
 
 public class SettingActivity extends Activity {
     PowerManager.WakeLock m_wklk;
@@ -25,6 +23,16 @@ public class SettingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarUtil.setTranslucentStatus(this, true);
+        }
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+
+        tintManager.setStatusBarTintEnabled(true);
+
+        // 使用颜色资源
+        tintManager.setStatusBarTintResource(R.color.red);
 
         //设置action bar
         ActionBar actionBar = getActionBar();
@@ -40,39 +48,6 @@ public class SettingActivity extends Activity {
         fragmentTransaction.replace(R.id.context, settingFragment);
         fragmentTransaction.commit();
 
-        //设置switch-抢红包
-       // setSwitch();
-    }
-
-    public void setLock()
-    {
-
-//        //解除锁屏
-//        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-//        final KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("MyKeyguardLock");
-//        keyguardLock.disableKeyguard();
-
-        //保持常亮
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK,"cn");
-        m_wklk.acquire();
-    }
-
-    public void releaseLock()
-    {
-        m_wklk.release();
-    }
-
-
-
-    private void setSwitch()
-    {
-        boolean isOnService = AccessibilityServiceUtil.isAccessibilitySettingsOn(getApplicationContext());
-        if (!isOnService) {
-            PrefsUtil.savePrefBoolean("robpaper", false);
-        } else {
-            PrefsUtil.savePrefBoolean("robpaper",true);
-        }
     }
 
     @Override
