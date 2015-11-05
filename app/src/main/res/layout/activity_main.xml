@@ -9,15 +9,26 @@
     android:background="@drawable/background">
 
     <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/bottom_background"/>
+
+    <ImageView
         android:id="@+id/test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@anim/cat_anim"/>
+        android:src="@anim/cat_anim"
+        app:layout_heightPercent="30%"
+        app:layout_widthPercent="30%"
+        app:layout_marginLeftPercent="35%"
+        app:layout_marginTopPercent="40%"
+        />
 
     <ImageView
         android:id="@+id/setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_alignRight="@id/test"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
@@ -33,6 +44,7 @@
         app:layout_widthPercent="19%"
         app:layout_marginLeftPercent="2%"
         app:layout_marginBottomPercent="0.2%"
+        android:layout_alignParentLeft="true"
         android:clickable="true"
         android:text="@string/help"
         android:textColor="#a61e1e"
@@ -59,6 +71,7 @@
         android:layout_height="0dp"
         app:layout_heightPercent="5.5%"
         app:layout_widthPercent="25%"
+        android:layout_alignParentRight="true"
         app:layout_marginBottomPercent="0.2%"
         android:layout_alignBottom="@id/test"
         android:layout_alignRight="@id/test"
