@@ -26,13 +26,11 @@ public class SettingActivity extends Activity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             SystemBarUtil.setTranslucentStatus(this, true);
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            tintManager.setStatusBarTintEnabled(true);
+            // 使用颜色资源
+            tintManager.setStatusBarTintResource(R.color.red);
         }
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-
-        tintManager.setStatusBarTintEnabled(true);
-
-        // 使用颜色资源
-        tintManager.setStatusBarTintResource(R.color.red);
 
         //设置action bar
         ActionBar actionBar = getActionBar();

@@ -1,12 +1,16 @@
 package com.smartman.redpaperhelper.service;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -20,6 +24,8 @@ import com.smartman.redpaperhelper.xutils.exception.DbException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by JiaHui on 2015/10/24.
@@ -41,6 +47,27 @@ public class RobPaperService extends AccessibilityService {
         int eventType = event.getEventType();
         switch (eventType) {
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:  //收到通知栏消息
+                PowerManager pm;
+                PowerManager.WakeLock wl;
+
+                KeyguardManager km;
+                KeyguardManager.KeyguardLock kl;
+                //获取电源管理器对象
+                pm=(PowerManager) getSystemService(getApplicationContext().POWER_SERVICE);
+
+                //获取PowerManager.WakeLock对象，后面的参数|表示同时传入两个值，最后的是调试用的Tag
+                wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
+
+                //点亮屏幕
+                wl.acquire();
+
+                //得到键盘锁管理器对象
+                km= (KeyguardManager)getSystemService(getApplicationContext().KEYGUARD_SERVICE);
+                kl = km.newKeyguardLock("unLock");
+
+                //解锁
+                kl.disableKeyguard();
+
                 List<CharSequence> texts = event.getText();
                 if (!texts.isEmpty()) {
                     for (CharSequence t : texts) {
@@ -57,6 +84,7 @@ public class RobPaperService extends AccessibilityService {
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:    //进入微信界面
                 if( isFromNotification ) {
                     String className = event.getClassName().toString();
+                    Log.i(TAG, className);
                     if (className.equals("com.tencent.mm.ui.LauncherUI")) {
                         if (isNotFromMoneyDetail) {
                             //先停顿再抢
@@ -137,6 +165,7 @@ public class RobPaperService extends AccessibilityService {
 
     private void openPacket() {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        Log.i(TAG,"nodeInfo: "+String.valueOf(nodeInfo == null));
         if (nodeInfo != null) {
             List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("拆红包");
             if (list != null && list.size() != 0) {
@@ -146,6 +175,17 @@ public class RobPaperService extends AccessibilityService {
                 closeInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 PressHomeKey();
             }
+        }
+        else
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    openPacket();
+                }
+            };
+            timer.schedule(task,3000);
         }
     }
 
@@ -161,7 +201,12 @@ public class RobPaperService extends AccessibilityService {
         //多大的红包
         List<AccessibilityNodeInfo> moneyInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw8");
         if (PrefsUtil.loadPrefBoolean("reply_money", false)) {
-            thanksString += ",谢谢你" + moneyInfo.get(0).getText().toString() + "的红包。";
+            if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
+                thanksString += ",谢谢你" + moneyInfo.get(0).getText().toString() + "的红包。";
+            }else
+            {
+                thanksString += "谢谢你" + moneyInfo.get(0).getText().toString() + "的红包。";
+            }
         }
         //自定义感谢语
         if (PrefsUtil.loadPrefBoolean("reply_words", false)) {
@@ -169,7 +214,7 @@ public class RobPaperService extends AccessibilityService {
         }
         isNotFromMoneyDetail = false;
         List<AccessibilityNodeInfo> backInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fc");
-        backInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        //backInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
         backInfo.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
 
         //导入数据库
@@ -177,6 +222,10 @@ public class RobPaperService extends AccessibilityService {
     }
 
     private void importDatabases(String person, double money) {
+        if(db==null)
+        {
+            db = DbUtils.create(getApplicationContext());
+        }
         Date date = new Date();
         DateFormat df = DateFormat.getDateInstance(); //变成日期
         String id = df.format(date);
