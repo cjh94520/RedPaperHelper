@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -38,14 +39,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            SystemBarUtil.setTranslucentStatus(this, true);
-            SystemBarTintManager tintManager = new SystemBarTintManager(this);
-            tintManager.setStatusBarTintEnabled(true);
-            // 使用颜色资源
-            tintManager.setStatusBarTintResource(R.color.red);
-        }
         startButton = (RelativeLayout) findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,18 +83,13 @@ public class MainActivity extends Activity {
         operatingAnim.setInterpolator(lin);
         setView.startAnimation(operatingAnim);
 
-        catView = (ImageView)findViewById(R.id.test);
+        catView = (ImageView)findViewById(R.id.cat);
 
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(catView!=null)
-        {
-            AnimationDrawable animationDrawable = (AnimationDrawable)catView.getDrawable();
-            animationDrawable.start();
-        }
     }
 
     @Override
@@ -111,9 +99,13 @@ public class MainActivity extends Activity {
         if (!isOnService) {
             start_text.setText("启动服务");
             start_text.setEnabled(true);
+            AnimationDrawable animationDrawable = (AnimationDrawable)catView.getDrawable();
+            animationDrawable.stop();
         } else {
             start_text.setText("运行中");
             start_text.setEnabled(false);
+            AnimationDrawable animationDrawable = (AnimationDrawable)catView.getDrawable();
+            animationDrawable.start();
         }
         Boolean isFirstIn = PrefsUtil.loadPrefBoolean("FIRST_IN", true);
         if(isFirstIn)

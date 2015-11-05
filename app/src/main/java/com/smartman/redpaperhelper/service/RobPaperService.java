@@ -55,28 +55,34 @@ public class RobPaperService extends AccessibilityService {
         int eventType = event.getEventType();
         switch (eventType) {
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:  //收到通知栏消息
-                pm=(PowerManager) getSystemService(Context.POWER_SERVICE);
-                //获取电源管理器对象
-                wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
-                //获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
-                wl.acquire();
-                //点亮屏幕
-
-                km= (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                //得到键盘锁管理器对象
-                kl = km.newKeyguardLock("unLock");
-                //参数是LogCat里用的Tag
-                kl.disableKeyguard();
-
-                boolean flag = km.inKeyguardRestrictedInputMode();
-                Log.i(TAG,"现在锁屏状态是: " + String.valueOf(flag));
-
                 List<CharSequence> texts = event.getText();
                 if (!texts.isEmpty()) {
                     for (CharSequence t : texts) {
                         String text = String.valueOf(t);
                         if (text.contains("[微信红包]"))  //通知栏某通知有信息包含[微信红包]
                         {
+//                            pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//                            //获取电源管理器对象
+//                            wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+//                            //获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+//                            wl.acquire();
+//                            //点亮屏幕
+//
+//                            km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+//                            //得到键盘锁管理器对象
+//                            kl = km.newKeyguardLock("unLock");
+//                            //参数是LogCat里用的Tag
+//
+//                            int num = 0;
+//                            kl.disableKeyguard();
+//
+//                            boolean flag = km.inKeyguardRestrictedInputMode();
+//                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
+//                            if (flag == true) {
+//                                kl.disableKeyguard();
+//                            }
+//                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
+
                             gotoWeCharUI(event);
                             isFromNotification = true;
                         }
@@ -85,7 +91,7 @@ public class RobPaperService extends AccessibilityService {
                 break;
 
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:    //进入微信界面
-                if( isFromNotification ) {
+                if (isFromNotification) {
                     String className = event.getClassName().toString();
                     Log.i(TAG, className);
                     if (className.equals("com.tencent.mm.ui.LauncherUI")) {
@@ -101,7 +107,8 @@ public class RobPaperService extends AccessibilityService {
                         //开始打开红包
                         openPacket();
                     } else if (className.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI")) {
-                        handleThanksWords();
+                       // handleThanksWords();
+                        ;
                     }
                 }
                 break;
@@ -148,12 +155,8 @@ public class RobPaperService extends AccessibilityService {
 
     private void getPacket() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-        Log.i(TAG,"getPacket()调用的次数是："+ ++count);
-        //这里写上误入总聊天界面的代码！！！！
-
-
-        if(rootNode==null)
-        {
+        Log.i(TAG, "getPacket()调用的次数是：" + ++count);
+        if (rootNode == null) {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
@@ -161,13 +164,28 @@ public class RobPaperService extends AccessibilityService {
                 }
             };
             Timer timer = new Timer(true);
-            timer.schedule(task,2000);
+            timer.schedule(task, 2000);
             return;
         }
+        //这里写上误入总聊天界面的代码！！！！
+        List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
+        if (tempList != null && tempList.size() != 0) {
+            tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            Log.i(TAG, "click is ok");
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    getPacket();
+                }
+            };
+            Timer timer = new Timer(true);
+            timer.schedule(task, 500);
+        }
+
         //使对话框失去焦点，否则点击事件无效，待测试
         List<AccessibilityNodeInfo> editList = rootNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/uo");
-        Log.i(TAG,"editList is null?" + String.valueOf(editList==null));
-        if(editList !=null) {
+        Log.i(TAG, "editList is null?" + String.valueOf(editList == null));
+        if (editList != null) {
             if (editList.size() != 0) {
                 AccessibilityNodeInfo editText = editList.get(0);
                 //失去焦点
@@ -181,9 +199,7 @@ public class RobPaperService extends AccessibilityService {
                     list.get(list.size() - 1).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
             }
-        }
-        else
-        {
+        } else {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
@@ -191,15 +207,15 @@ public class RobPaperService extends AccessibilityService {
                 }
             };
             Timer timer = new Timer(true);
-            timer.schedule(task,3000);
+            timer.schedule(task, 3000);
         }
     }
 
     private void openPacket() {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-        Log.i(TAG,"nodeInfo: "+String.valueOf(nodeInfo == null));
+        Log.i(TAG, "nodeInfo: " + String.valueOf(nodeInfo == null));
         if (nodeInfo != null) {
-            Log.i(TAG,"nodeInfo: nodeInfo != null");
+            Log.i(TAG, "nodeInfo: nodeInfo != null");
             List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("拆红包");
             if (list != null && list.size() != 0) {
                 list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -216,17 +232,15 @@ public class RobPaperService extends AccessibilityService {
         //抢到谁的红包
         List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw4");
         if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
-            int end_index = personInfo.get(0).getText().toString().indexOf("的红包",0);
-
-            thanksString += "@" + personInfo.get(0).getText().toString().substring(0,end_index) ;
+            int end_index = personInfo.get(0).getText().toString().indexOf("的红包", 0);
+            thanksString += "@" + personInfo.get(0).getText().toString().substring(0, end_index);
         }
         //多大的红包
         List<AccessibilityNodeInfo> moneyInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw8");
         if (PrefsUtil.loadPrefBoolean("reply_money", false)) {
             if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
                 thanksString += ",谢谢你" + moneyInfo.get(0).getText().toString() + "的红包。";
-            }else
-            {
+            } else {
                 thanksString += "谢谢你" + moneyInfo.get(0).getText().toString() + "的红包。";
             }
         }
@@ -237,15 +251,14 @@ public class RobPaperService extends AccessibilityService {
         isNotFromMoneyDetail = false;
         List<AccessibilityNodeInfo> backInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fc");
         //backInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-        backInfo.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        //backInfo.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
 
         //导入数据库
         importDatabases(personInfo.get(0).getText().toString(), Double.valueOf(moneyInfo.get(0).getText().toString()));
     }
 
     private void importDatabases(String person, double money) {
-        if(db==null)
-        {
+        if (db == null) {
             db = DbUtils.create(getApplicationContext());
         }
         Date date = new Date();
@@ -264,9 +277,7 @@ public class RobPaperService extends AccessibilityService {
             if (testPaper == null) {
                 db.save(redPaper);
                 redPaperItem.parent = redPaper;
-            }
-            else
-            {
+            } else {
                 redPaperItem.parent = testPaper;
             }
         } catch (DbException e) {
@@ -282,12 +293,12 @@ public class RobPaperService extends AccessibilityService {
 
     private void replyThanksWords() {
         if (thanksString.equals("")) {
-            wl.release();
-            wl = null;
-            kl.reenableKeyguard();
-            kl = null;
-            pm = null;
-            km = null;
+//            wl.release();
+//            wl = null;
+//            kl.reenableKeyguard();
+//            kl = null;
+//            pm = null;
+//            km = null;
             gotoRecordActivity();
             return;
         }
@@ -319,7 +330,7 @@ public class RobPaperService extends AccessibilityService {
                 sendButton.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
 
                 //重新置空
-                thanksString  = "";
+                thanksString = "";
 
                 gotoRecordActivity();
             }
@@ -335,8 +346,7 @@ public class RobPaperService extends AccessibilityService {
         this.startActivity(intent);
     }
 
-    private void gotoRecordActivity()
-    {
+    private void gotoRecordActivity() {
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(getApplicationContext(), RecordActivity.class);
