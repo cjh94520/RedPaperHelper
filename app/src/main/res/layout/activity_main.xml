@@ -6,9 +6,10 @@
         android:background="@drawable/background">
 
         <ImageView
+            android:id="@+id/bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bottom_background" />
+            android:background="@drawable/bottom_normal" />
 
         <ImageView
             android:id="@+id/cat"

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.activity.RecordActivity;
 import com.smartman.redpaperhelper.entity.RedPaper;
 import com.smartman.redpaperhelper.entity.RedPaperItem;
@@ -61,27 +62,27 @@ public class RobPaperService extends AccessibilityService {
                         String text = String.valueOf(t);
                         if (text.contains("[微信红包]"))  //通知栏某通知有信息包含[微信红包]
                         {
-//                            pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-//                            //获取电源管理器对象
-//                            wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
-//                            //获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
-//                            wl.acquire();
-//                            //点亮屏幕
-//
-//                            km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-//                            //得到键盘锁管理器对象
-//                            kl = km.newKeyguardLock("unLock");
-//                            //参数是LogCat里用的Tag
-//
-//                            int num = 0;
-//                            kl.disableKeyguard();
-//
-//                            boolean flag = km.inKeyguardRestrictedInputMode();
-//                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
-//                            if (flag == true) {
-//                                kl.disableKeyguard();
-//                            }
-//                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
+                            pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                            //获取电源管理器对象
+                            wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+                            //获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+                            wl.acquire();
+                            //点亮屏幕
+
+                            km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+                            //得到键盘锁管理器对象
+                            kl = km.newKeyguardLock("unLock");
+                            //参数是LogCat里用的Tag
+
+                            int num = 0;
+                            kl.disableKeyguard();
+
+                            boolean flag = km.inKeyguardRestrictedInputMode();
+                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
+                            if (flag == true) {
+                                kl.disableKeyguard();
+                            }
+                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
 
                             gotoWeCharUI(event);
                             isFromNotification = true;
@@ -107,8 +108,7 @@ public class RobPaperService extends AccessibilityService {
                         //开始打开红包
                         openPacket();
                     } else if (className.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI")) {
-                       // handleThanksWords();
-                        ;
+                        handleThanksWords();
                     }
                 }
                 break;
@@ -253,6 +253,8 @@ public class RobPaperService extends AccessibilityService {
         //backInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
         //backInfo.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
 
+        //sendNotification();
+
         //导入数据库
         importDatabases(personInfo.get(0).getText().toString(), Double.valueOf(moneyInfo.get(0).getText().toString()));
     }
@@ -293,12 +295,12 @@ public class RobPaperService extends AccessibilityService {
 
     private void replyThanksWords() {
         if (thanksString.equals("")) {
-//            wl.release();
-//            wl = null;
-//            kl.reenableKeyguard();
-//            kl = null;
-//            pm = null;
-//            km = null;
+            wl.release();
+            wl = null;
+            kl.reenableKeyguard();
+            kl = null;
+            pm = null;
+            km = null;
             gotoRecordActivity();
             return;
         }
@@ -351,5 +353,17 @@ public class RobPaperService extends AccessibilityService {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(getApplicationContext(), RecordActivity.class);
         startActivity(intent);
+    }
+
+    private void sendNotification(String person, String money) {
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, RecordActivity.class), 0);
+        Notification notification = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setTicker("已经帮你偷来了红包")
+                .setContentTitle("红包快讯")
+                .setContentText("从" + person + "偷来价值:" + money + "元的红包")
+                .setContentIntent(pendingIntent)
+                .setNumber(1)
+                .build();
     }
 }

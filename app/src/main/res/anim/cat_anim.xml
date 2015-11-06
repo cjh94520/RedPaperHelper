@@ -7,16 +7,16 @@
 <animation-list
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="false">
-    <item android:drawable="@drawable/cat0" android:duration="100"></item>
-    <item android:drawable="@drawable/cat1" android:duration="100"></item>
-    <item android:drawable="@drawable/cat2" android:duration="100"></item>
-    <item android:drawable="@drawable/cat3" android:duration="100"></item>
-    <item android:drawable="@drawable/cat4" android:duration="100"></item>
-    <item android:drawable="@drawable/cat5" android:duration="100"></item>
-    <item android:drawable="@drawable/cat6" android:duration="100"></item>
-    <item android:drawable="@drawable/cat5" android:duration="100"></item>
-    <item android:drawable="@drawable/cat4" android:duration="100"></item>
-    <item android:drawable="@drawable/cat3" android:duration="100"></item>
-    <item android:drawable="@drawable/cat2" android:duration="100"></item>
-    <item android:drawable="@drawable/cat1" android:duration="100"></item>
+    <item android:drawable="@drawable/cat0" android:duration="150"></item>
+    <item android:drawable="@drawable/cat1" android:duration="150"></item>
+    <item android:drawable="@drawable/cat2" android:duration="150"></item>
+    <item android:drawable="@drawable/cat3" android:duration="150"></item>
+    <item android:drawable="@drawable/cat4" android:duration="150"></item>
+    <item android:drawable="@drawable/cat5" android:duration="150"></item>
+    <item android:drawable="@drawable/cat6" android:duration="150"></item>
+    <item android:drawable="@drawable/cat5" android:duration="150"></item>
+    <item android:drawable="@drawable/cat4" android:duration="150"></item>
+    <item android:drawable="@drawable/cat3" android:duration="150"></item>
+    <item android:drawable="@drawable/cat2" android:duration="150"></item>
+    <item android:drawable="@drawable/cat1" android:duration="150"></item>
 </animation-list>

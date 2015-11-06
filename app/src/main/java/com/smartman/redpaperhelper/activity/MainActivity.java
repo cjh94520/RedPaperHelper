@@ -3,11 +3,10 @@ package com.smartman.redpaperhelper.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -16,12 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.mobstat.StatService;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.ui.ServiceAlertDialog;
 import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
 import com.smartman.redpaperhelper.utils.PrefsUtil;
-import com.smartman.redpaperhelper.utils.SystemBarUtil;
 
 public class MainActivity extends Activity {
 
@@ -34,11 +31,27 @@ public class MainActivity extends Activity {
     private TextView recordView;
     private ServiceAlertDialog dialog;
     private ImageView catView;
+    private ImageView bottomView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bottomView = (ImageView)findViewById(R.id.bottom);
+        bottomView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if( event.getAction() == MotionEvent.ACTION_DOWN )
+                {
+                    bottomView.setBackgroundResource(R.drawable.bottom_normal);
+                }
+                else
+                {
+                    bottomView.setBackgroundResource(R.drawable.bottom_press);
+                }
+                return false;
+            }
+        });
         startButton = (RelativeLayout) findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
