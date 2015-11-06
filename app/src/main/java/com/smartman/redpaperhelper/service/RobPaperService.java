@@ -3,6 +3,7 @@ package com.smartman.redpaperhelper.service;
 import android.accessibilityservice.AccessibilityService;
 import android.app.KeyguardManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -229,34 +230,43 @@ public class RobPaperService extends AccessibilityService {
 
     private void handleThanksWords() {
         AccessibilityNodeInfo PaperDetailInfo = getRootInActiveWindow();
+        String person;
+        String money;
+
         //抢到谁的红包
-        List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw4");
+        List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByText("的红包");
+        int end_index = personInfo.get(0).getText().toString().indexOf("的红包", 0);
+        person = personInfo.get(0).getText().toString().substring(0, end_index);
+
+        Log.i(TAG,"谁的红包："+person);
+
         if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
-            int end_index = personInfo.get(0).getText().toString().indexOf("的红包", 0);
-            thanksString += "@" + personInfo.get(0).getText().toString().substring(0, end_index);
+            thanksString += "@" + person;
         }
         //多大的红包
-        List<AccessibilityNodeInfo> moneyInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aw8");
+        List<AccessibilityNodeInfo> moneyInfo = PaperDetailInfo.findAccessibilityNodeInfosByText("已存入零钱");
+        AccessibilityNodeInfo parent = moneyInfo.get(0).getParent();
+
+        money = parent.getChild(2).getText().toString();
+
         if (PrefsUtil.loadPrefBoolean("reply_money", false)) {
             if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
-                thanksString += ",谢谢你" + moneyInfo.get(0).getText().toString() + "的红包。";
+                thanksString += ",谢谢你" + money + "的红包。";
             } else {
-                thanksString += "谢谢你" + moneyInfo.get(0).getText().toString() + "的红包。";
+                thanksString += "谢谢你" + money + "的红包。";
             }
         }
+
         //自定义感谢语
         if (PrefsUtil.loadPrefBoolean("reply_words", false)) {
             thanksString += PrefsUtil.loadPrefString("thanks_words", "");
         }
         isNotFromMoneyDetail = false;
-        List<AccessibilityNodeInfo> backInfo = PaperDetailInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/fc");
-        //backInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-        //backInfo.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
 
-        //sendNotification();
+        sendNotification(person,money);
 
         //导入数据库
-        importDatabases(personInfo.get(0).getText().toString(), Double.valueOf(moneyInfo.get(0).getText().toString()));
+        importDatabases(person,Double.valueOf(money));
     }
 
     private void importDatabases(String person, double money) {
@@ -360,10 +370,13 @@ public class RobPaperService extends AccessibilityService {
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setTicker("已经帮你偷来了红包")
-                .setContentTitle("红包快讯")
-                .setContentText("从" + person + "偷来价值:" + money + "元的红包")
+                .setContentTitle("红包神偷展现真正的技术")
+                .setContentText("从" + person + "处偷来价值:" + money + "元的红包")
                 .setContentIntent(pendingIntent)
                 .setNumber(1)
                 .build();
+        notification.flags = Notification.FLAG_AUTO_CANCEL;
+        NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(1,notification);
     }
 }
