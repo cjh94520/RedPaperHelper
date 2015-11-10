@@ -19,6 +19,7 @@ import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.ui.ServiceAlertDialog;
 import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
 import com.smartman.redpaperhelper.utils.PrefsUtil;
+import com.xiaomi.market.sdk.XiaomiUpdateAgent;
 
 public class MainActivity extends Activity {
 
@@ -36,23 +37,27 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //小米自动更新sdk
+        XiaomiUpdateAgent.update(this);
+
         setContentView(R.layout.activity_main);
         bottomView = (ImageView)findViewById(R.id.bottom);
-        bottomView.setOnTouchListener(new View.OnTouchListener() {
+
+        startButton = (RelativeLayout) findViewById(R.id.start);
+        startButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if( event.getAction() == MotionEvent.ACTION_DOWN )
                 {
-                    bottomView.setBackgroundResource(R.drawable.bottom_normal);
-                }
-                else
-                {
                     bottomView.setBackgroundResource(R.drawable.bottom_press);
+                }
+                else if( event.getAction() == MotionEvent.ACTION_UP )
+                {
+                    bottomView.setBackgroundResource(R.drawable.bottom_normal);
                 }
                 return false;
             }
         });
-        startButton = (RelativeLayout) findViewById(R.id.start);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +79,10 @@ public class MainActivity extends Activity {
         helpView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new ServiceAlertDialog(MainActivity.this);
+                //dialog = new ServiceAlertDialog(MainActivity.this);
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,HelpActivity.class);
+                startActivity(intent);
             }
         });
 

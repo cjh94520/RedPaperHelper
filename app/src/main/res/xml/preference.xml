@@ -18,6 +18,7 @@
             android:key="reply_person"
             android:title="\@发红包的人"></SwitchPreference>
         <SwitchPreference
+            android:defaultValue="false"
             android:key="reply_words"
             android:title="自定义感谢语"></SwitchPreference>
         <EditTextPreference

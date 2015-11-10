@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import com.baidu.mobstat.StatService;
@@ -15,8 +17,11 @@ import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.adapter.StatusExpandAdapter;
 import com.smartman.redpaperhelper.entity.RedPaper;
 import com.smartman.redpaperhelper.entity.RedPaperItem;
+import com.smartman.redpaperhelper.ui.Counter;
 import com.smartman.redpaperhelper.utils.SystemBarUtil;
 import com.smartman.redpaperhelper.xutils.DbUtils;
+import com.smartman.redpaperhelper.xutils.db.sqlite.Selector;
+import com.smartman.redpaperhelper.xutils.db.table.DbModel;
 import com.smartman.redpaperhelper.xutils.exception.DbException;
 
 import java.text.DateFormat;
@@ -28,6 +33,7 @@ import java.util.List;
  */
 public class RecordActivity extends Activity {
 
+    private static final String TAG = "RecordActivity";
     private ExpandableListView expandlistView;
     private StatusExpandAdapter statusAdapter;
     private Context context;
@@ -55,44 +61,12 @@ public class RecordActivity extends Activity {
 
     }
 
-    private void importDatabases(String person ,double money)
-    {
-        Date date = new Date();
-        DateFormat df = DateFormat.getDateInstance(); //变成日期
-        String id = df.format(date);
-        RedPaper redPaper = new RedPaper();
-        redPaper.setDate(id);
-
-        RedPaper testPaper ;
-        try {
-            testPaper = db.findById(RedPaper.class,date);
-            if( testPaper == null)
-            {
-                db.save(redPaper);
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-
-        RedPaperItem redPaperItem = new RedPaperItem();
-        redPaperItem.setMoney(money);
-        redPaperItem.setPerson(person);
-        redPaperItem.parent = redPaper;
-
-        try {
-            db.saveBindingId(redPaperItem);
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 初始化可拓展列表
      */
     private void initExpandListView() throws DbException {
         List<RedPaper> list = getListData();
-        if( list == null )
-        {
+        if (list == null) {
             return;
         }
         statusAdapter = new StatusExpandAdapter(context, list);
@@ -115,6 +89,10 @@ public class RecordActivity extends Activity {
                 return true;
             }
         });
+
+        Counter counter = new Counter(this);
+        setdata(counter);
+        expandlistView.addFooterView(counter);
     }
 
     private List<RedPaper> getListData() throws DbException {
@@ -150,12 +128,22 @@ public class RecordActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id)
-        {
-            case android.R.id.home :
+        switch (id) {
+            case android.R.id.home:
                 finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setdata(Counter counter) {
+        try {
+            List<DbModel> data =
+            db.findDbModelAll(Selector.from(RedPaperItem.class).select("sum(money)", "count(money)"));
+            counter.numText.setText(data.get(0).getString("count(money)"));
+            counter.totalText.setText(data.get(0).getString("sum(money)"));
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 }
