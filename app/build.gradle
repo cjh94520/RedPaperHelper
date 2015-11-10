@@ -17,6 +17,54 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+
+        wandoujia {
+            manifestPlaceholders = [CHANNEL_VALUE: "wandoujia"]
+        }
+
+        baidu {
+            manifestPlaceholders = [CHANNEL_VALUE: "baidu"]
+        }
+
+        c360 {
+            manifestPlaceholders = [CHANNEL_VALUE: "c360"]
+        }
+
+        huawei {
+            manifestPlaceholders = [CHANNEL_VALUE: "huawei"]
+        }
+
+        tx {
+            manifestPlaceholders = [CHANNEL_VALUE: "tx"]
+        }
+
+        lenovo {
+            manifestPlaceholders = [CHANNEL_VALUE: "lenovo"]
+        }
+
+        pphelper {
+            manifestPlaceholders = [CHANNEL_VALUE: "pphelper"]
+        }
+
+        sougou {
+            manifestPlaceholders = [CHANNEL_VALUE: "sougou"]
+        }
+
+        xiaomi {
+            manifestPlaceholders = [CHANNEL_VALUE: "xiaomi"]
+        }
+
+        meizu {
+            manifestPlaceholders = [CHANNEL_VALUE: "meizu"]
+        }
+
+        jifeng {
+            manifestPlaceholders = [CHANNEL_VALUE: "jifeng"]
+        }
+
+    }
 }
 
 dependencies {

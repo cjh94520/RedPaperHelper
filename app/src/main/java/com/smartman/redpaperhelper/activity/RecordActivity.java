@@ -59,6 +59,16 @@ public class RecordActivity extends Activity {
         actionBar.setTitle(R.string.record);
         actionBar.setDisplayShowHomeEnabled(false);
 
+        //导入数据
+        db = DbUtils.create(this);
+        context = this;
+        expandlistView = (ExpandableListView) findViewById(R.id.expandlist);
+        try {
+            initExpandListView();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -93,6 +103,7 @@ public class RecordActivity extends Activity {
         Counter counter = new Counter(this);
         setdata(counter);
         expandlistView.addFooterView(counter);
+
     }
 
     private List<RedPaper> getListData() throws DbException {
@@ -106,16 +117,6 @@ public class RecordActivity extends Activity {
         super.onResume();
         //开启百度统计
         StatService.onResume(this);
-
-        //导入数据
-        db = DbUtils.create(this);
-        context = this;
-        expandlistView = (ExpandableListView) findViewById(R.id.expandlist);
-        try {
-            initExpandListView();
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
