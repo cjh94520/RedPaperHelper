@@ -9,10 +9,10 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -24,6 +24,7 @@ import com.smartman.redpaperhelper.utils.PrefsUtil;
 import com.smartman.redpaperhelper.xutils.DbUtils;
 import com.smartman.redpaperhelper.xutils.exception.DbException;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +40,7 @@ public class RobPaperService extends AccessibilityService {
     public ClipboardManager clipboard;
     public boolean isNotFromMoneyDetail = true;
     public boolean isFromNotification = false;
+
     private DbUtils db;
     private String thanksString = "";
 
@@ -70,20 +72,15 @@ public class RobPaperService extends AccessibilityService {
 
                             km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
                             //得到键盘锁管理器对象
-                            kl = km.newKeyguardLock("unLock");
-                            //参数是LogCat里用的Tag
-
-                            kl.disableKeyguard();
-
-                            boolean flag = km.inKeyguardRestrictedInputMode();
+                            boolean flag = km.isKeyguardLocked();
                             Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
                             if (flag == true) {
-                                kl.disableKeyguard();
+                                openKeyGuard(event);
+                            } else {
+                                isFromNotification = true;
+                                gotoWeCharUI(event);
                             }
-                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
 
-                            isFromNotification = true;
-                            gotoWeCharUI(event);
                         }
                     }
                 }
@@ -97,7 +94,7 @@ public class RobPaperService extends AccessibilityService {
                         if (isNotFromMoneyDetail) {
                             //抢
                             Log.i(TAG, "开始抢红包咯");
-                            boolean flag = km.inKeyguardRestrictedInputMode();
+                            boolean flag = km.isKeyguardLocked();
                             Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
                             //getPacket();
                         } else {
@@ -114,6 +111,17 @@ public class RobPaperService extends AccessibilityService {
                 }
                 break;
         }
+
+    }
+
+    private void openKeyGuard(AccessibilityEvent tempEvent) {
+        final AccessibilityEvent event = tempEvent;
+        kl = km.newKeyguardLock("unLock");
+        kl.disableKeyguard();
+        boolean flag = km.isKeyguardLocked();
+        Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
+        isFromNotification = true;
+        gotoWeCharUI(event);
 
     }
 
@@ -155,6 +163,8 @@ public class RobPaperService extends AccessibilityService {
 
     private void getPacket() {
         Log.i(TAG, "getPacket()被调用");
+        boolean flag = km.isKeyguardLocked();
+        Log.i(TAG, "getPacket()被调用,现在锁屏状态是: " + String.valueOf(flag));
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         if (rootNode == null) {
             TimerTask task = new TimerTask() {
@@ -170,20 +180,21 @@ public class RobPaperService extends AccessibilityService {
         }
 
         //这里写上误入总聊天界面的代码！！！！
-//        List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
-//        if (tempList != null && tempList.size() != 0) {
-//            tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//            Log.i(TAG, "click is ok");
-//            TimerTask task = new TimerTask() {
-//                @Override
-//                public void run() {
-//                    getPacket();
-//                }
-//            };
-//            Log.i(TAG,"timer2开启");
-//            Timer timer = new Timer(true);
-//            timer.schedule(task, 400);
-//        }
+            List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
+            if (tempList != null && tempList.size() != 0) {
+                tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                Log.i(TAG, "click is ok");
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        getPacket();
+                    }
+                };
+                Log.i(TAG, "timer2开启");
+                Timer timer = new Timer(true);
+                timer.schedule(task, 400);
+                return;
+            }
 
         List<AccessibilityNodeInfo> list = rootNode.findAccessibilityNodeInfosByText("领取红包");
         if (list != null && list.size() != 0) {
@@ -203,6 +214,7 @@ public class RobPaperService extends AccessibilityService {
             Log.i(TAG, "timer3开启");
             Timer timer = new Timer(true);
             timer.schedule(task, 400);
+            return;
         }
     }
 
@@ -215,8 +227,15 @@ public class RobPaperService extends AccessibilityService {
             if (list != null && list.size() != 0) {
                 list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
             } else {
-                List<AccessibilityNodeInfo> closeInfo = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ayn");
-                closeInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                //模拟按下返回键
+                Runtime runtime = Runtime.getRuntime();
+                try {
+                    runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                List<AccessibilityNodeInfo> closeInfo = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ayn");
+//                closeInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 PressHomeKey();
             }
         }
@@ -306,13 +325,13 @@ public class RobPaperService extends AccessibilityService {
     private void replyThanksWords() {
         if (thanksString.equals("")) {
             Log.i(TAG, "跑进来了");
+            PressHomeKey();
             wl.release();
             wl = null;
-            kl.reenableKeyguard();
-            kl = null;
-            boolean flag = km.inKeyguardRestrictedInputMode();
-            Log.i(TAG, "现在锁屏k1是否为null: " + String.valueOf(kl == null));
-            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
+            if(kl!=null) {
+                kl.reenableKeyguard();
+                kl = null;
+            }
             return;
         }
         try {
@@ -341,7 +360,13 @@ public class RobPaperService extends AccessibilityService {
             //重新置空
             thanksString = "";
             PressHomeKey();
-            // gotoRecordActivity();
+
+            wl.release();
+            wl = null;
+            if(kl!=null) {
+                kl.reenableKeyguard();
+                kl = null;
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
