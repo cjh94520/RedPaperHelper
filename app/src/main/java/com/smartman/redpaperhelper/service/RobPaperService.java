@@ -389,7 +389,9 @@ public class RobPaperService extends AccessibilityService {
 
     private void sendNotification(String person, String money) {
         int requestCode = (int) System.currentTimeMillis();
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, RecordActivity.class), 0);
+        Intent intent = new Intent(this, RecordActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, 0);
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setTicker("已经帮你偷来了红包")
