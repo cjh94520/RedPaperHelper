@@ -17,11 +17,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="        您现正使用的红包神偷是一款可后台自动运作的微信抢红包神器！
+                android:text="        您现正使用的招积红包是一款可后台自动运作的微信抢红包神器！
 \n\n简要说明如下：
         \n1.开启服务：
         \n首先您需要保证微信正正常运行。
-        \n然后在红包神偷主界面面中点击“启动”，即可进入如下界面:"
+        \n然后在招积红包主界面面中点击“启动”，即可进入如下界面:"
                 android:textSize="19sp" />
 
             <ImageView
@@ -42,29 +42,63 @@
                 android:layout_height="wrap_content"
                 android:textSize="19sp"
                 android:singleLine="false"
-                android:text="\n      按照上图操作完成后，返回主界面，若看见招财猫正在招手，那么恭喜您，红包神偷已经顺利进入待命状态，随时为您秒抢好友发出的红包！！
+                android:text="\n      按照上图操作完成后，返回主界面，若看见招积猫正在招手，那么恭喜您，招积红包已经顺利进入待命状态，随时为您秒抢好友发出的红包！！
 
 	\n\n2.设置：
-	\n点击主界面右上角齿轮图标，即可进入设置界面，可对红包神偷的高级功能进行设置。
+	\n点击主界面右上角齿轮图标，即可进入设置界面，可对招积红包的高级功能进行设置。
 
 	\n\n3.红包记录：
-	\n点击主界面右下“红包记录”字样可进入红包记录界面，查看红包神偷为您斩获的红包历史战绩和累计总金额！
+	\n点击主界面右下“红包记录”字样可进入红包记录界面，查看招积红包为您斩获的红包历史战绩和累计总金额！
 
 	\n\n4.红包攻略：
-	\n（1）请确保使用红包神偷时手机系统正常，电量充足，网络畅顺，微信已登录，有好友，有好友会发红包。(请不要问我为什么)
-	\n（2）使用管理软件的一键加速，会关掉红包神偷的后台程序(微信后台也会关闭)。请在抢红包中避免使用，或将红包神偷添加到一键加速的白名单。
-	\n（3）请注意提升自我人品，提高个人魅力，多交 土豪 益友，多加有 土豪 文化氛围的群聊，争取更多遇见理想红包的机会！"/>
+	\n（1）请确保使用招积红包时手机系统正常，电量充足，网络畅顺，微信已登录，有好友，有好友会发红包。(请不要问我为什么)
+	\n（2）使用管理软件的一键加速，会关掉招积红包的后台程序(微信后台也会关闭)。请在抢红包中避免使用，或将招积红包添加到一键加速的白名单。
+	\n（3）请注意提升自我人品，提高个人魅力，多交(土豪)益友，多加有(土豪)活跃氛围的群聊，争取更多遇见理想红包的机会！"/>
+
 
             <TextView
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:singleLine="false"
                 android:alpha="0.8"
-                android:text="\n\n\n红包神偷由 xxxx团队 制作
-\n对本软件有任何建议，
-\n欢迎通过以下邮箱向我们留言："/>
+                android:text="\n\n\n"/>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:singleLine="false"
+                android:alpha="0.8"
+                android:text="红包神偷由Smile（思猫）团队制作"/>
+
+            <TextView
+                android:autoLink="email"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:singleLine="false"
+                android:alpha="0.8"
+                android:text="对本软件有任何建议"/>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:singleLine="false"
+                android:alpha="0.8"
+                android:text="欢迎通过以下邮箱向我们留言："/>
+            <TextView
+                android:autoLink="email"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:singleLine="false"
+                android:alpha="0.8"
+                android:text="smile_cat_team@163.com"/>
 
         </LinearLayout>
     </ScrollView>

@@ -14,23 +14,79 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-        <View
-            android:id="@+id/group_tiao"
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="55dp"
-            android:background="@color/time_line_bg" />
-
-        <ExpandableListView
-            android:id="@+id/expandlist"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_weight="9"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:cacheColorHint="#00000000"
-            android:divider="@null" />
-    </RelativeLayout>
+            android:layout_height="0dp">
+
+            <View
+                android:id="@+id/group_tiao"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="55dp"
+                android:background="@color/time_line_bg" />
+
+            <ExpandableListView
+                android:id="@+id/expandlist"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:cacheColorHint="#00000000"
+                android:divider="@null" />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="2dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:gravity="right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="抢到:  "/>
+                <TextView
+                    android:id="@+id/num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#d62323"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  个红包"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:gravity="right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:layout_marginRight="2dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="总计：  "/>
+                <TextView
+                    android:id="@+id/total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#d62323"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  元"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.baidu.mobstat.StatService;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -23,6 +24,8 @@ import com.smartman.redpaperhelper.xutils.DbUtils;
 import com.smartman.redpaperhelper.xutils.db.sqlite.Selector;
 import com.smartman.redpaperhelper.xutils.db.table.DbModel;
 import com.smartman.redpaperhelper.xutils.exception.DbException;
+
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -38,6 +41,9 @@ public class RecordActivity extends Activity {
     private StatusExpandAdapter statusAdapter;
     private Context context;
     private DbUtils db;
+
+    private TextView numView;
+    private TextView totalView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +106,11 @@ public class RecordActivity extends Activity {
             }
         });
 
-        Counter counter = new Counter(this);
-        setdata(counter);
-        expandlistView.addFooterView(counter);
+       // Counter counter = new Counter(this);
+        //setdata(counter);
+        //expandlistView.addFooterView(counter);
 
+        setTotal();
     }
 
     private List<RedPaper> getListData() throws DbException {
@@ -146,5 +153,20 @@ public class RecordActivity extends Activity {
         } catch (DbException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setTotal()
+    {
+        numView = (TextView)findViewById(R.id.num);
+        totalView = (TextView)findViewById(R.id.total);
+        try {
+            List<DbModel> data =
+                    db.findDbModelAll(Selector.from(RedPaperItem.class).select("sum(money)", "count(money)"));
+            numView.setText(data.get(0).getString("count(money)"));
+            totalView.setText(data.get(0).getString("sum(money)"));
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
     }
 }

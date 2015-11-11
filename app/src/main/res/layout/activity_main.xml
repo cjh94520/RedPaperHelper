@@ -53,13 +53,15 @@
             android:layout_height="0dp"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
-            android:alpha="0.6"
+            android:alpha="0.8"
             android:text="@string/copyright"
-            android:textSize="20sp"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textColor="#a61e1e"
             android:visibility="invisible"
             app:layout_heightPercent="5.5%"
             app:layout_marginBottomPercent="0.2%"
-            app:layout_widthPercent="25%" />
+            app:layout_widthPercent="35%" />
 
 
         <TextView
