@@ -20,48 +20,52 @@ android {
 
     productFlavors {
 
+        normal {
+            manifestPlaceholders = [CHANNEL_VALUE: "normal"]
+        }
+
         wandoujia {
-            manifestPlaceholders = [CHANNEL_VALUE: "wandoujia"]
+            manifestPlaceholders = [CHANNEL_VALUE: "豌豆荚"]
         }
 
         baidu {
-            manifestPlaceholders = [CHANNEL_VALUE: "baidu"]
+            manifestPlaceholders = [CHANNEL_VALUE: "百度"]
         }
 
         c360 {
-            manifestPlaceholders = [CHANNEL_VALUE: "c360"]
+            manifestPlaceholders = [CHANNEL_VALUE: "360"]
         }
 
         huawei {
-            manifestPlaceholders = [CHANNEL_VALUE: "huawei"]
+            manifestPlaceholders = [CHANNEL_VALUE: "华为"]
         }
 
         tx {
-            manifestPlaceholders = [CHANNEL_VALUE: "tx"]
+            manifestPlaceholders = [CHANNEL_VALUE: "应用宝"]
         }
 
         lenovo {
-            manifestPlaceholders = [CHANNEL_VALUE: "lenovo"]
+            manifestPlaceholders = [CHANNEL_VALUE: "联想"]
         }
 
         pphelper {
-            manifestPlaceholders = [CHANNEL_VALUE: "pphelper"]
+            manifestPlaceholders = [CHANNEL_VALUE: "PP助手"]
         }
 
         sougou {
-            manifestPlaceholders = [CHANNEL_VALUE: "sougou"]
+            manifestPlaceholders = [CHANNEL_VALUE: "搜狗"]
         }
 
         xiaomi {
-            manifestPlaceholders = [CHANNEL_VALUE: "xiaomi"]
+            manifestPlaceholders = [CHANNEL_VALUE: "小米"]
         }
 
         meizu {
-            manifestPlaceholders = [CHANNEL_VALUE: "meizu"]
+            manifestPlaceholders = [CHANNEL_VALUE: "魅族"]
         }
 
         jifeng {
-            manifestPlaceholders = [CHANNEL_VALUE: "jifeng"]
+            manifestPlaceholders = [CHANNEL_VALUE: "机锋"]
         }
 
     }

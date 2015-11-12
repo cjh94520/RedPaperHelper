@@ -41,18 +41,15 @@ public class MainActivity extends Activity {
         XiaomiUpdateAgent.update(this);
 
         setContentView(R.layout.activity_main);
-        bottomView = (ImageView)findViewById(R.id.bottom);
+        bottomView = (ImageView) findViewById(R.id.bottom);
 
         startButton = (RelativeLayout) findViewById(R.id.start);
         startButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if( event.getAction() == MotionEvent.ACTION_DOWN )
-                {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     bottomView.setBackgroundResource(R.drawable.bottom_press);
-                }
-                else if( event.getAction() == MotionEvent.ACTION_UP )
-                {
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     bottomView.setBackgroundResource(R.drawable.bottom_normal);
                 }
                 return false;
@@ -61,7 +58,14 @@ public class MainActivity extends Activity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                try {
+                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
             }
         });
 
@@ -70,7 +74,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), SettingActivity.class);
+                intent.setClass(MainActivity.this, SettingActivity.class);
                 startActivity(intent);
             }
         });
@@ -81,7 +85,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 //dialog = new ServiceAlertDialog(MainActivity.this);
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this,HelpActivity.class);
+                intent.setClass(MainActivity.this, HelpActivity.class);
                 startActivity(intent);
             }
         });
@@ -91,20 +95,20 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this,RecordActivity.class);
+                intent.setClass(MainActivity.this, RecordActivity.class);
                 startActivity(intent);
             }
         });
 
-        start_text = (TextView)findViewById(R.id.start_text);
+        start_text = (TextView) findViewById(R.id.start_text);
 
-        setView = (ImageView)findViewById(R.id.setting);
+        setView = (ImageView) findViewById(R.id.setting);
         Animation operatingAnim = AnimationUtils.loadAnimation(this, R.anim.setting_anim);
         LinearInterpolator lin = new LinearInterpolator();
         operatingAnim.setInterpolator(lin);
         setView.startAnimation(operatingAnim);
 
-        catView = (ImageView)findViewById(R.id.cat);
+        catView = (ImageView) findViewById(R.id.cat);
 
     }
 
@@ -120,19 +124,18 @@ public class MainActivity extends Activity {
         if (!isOnService) {
             start_text.setText("启动服务");
             start_text.setEnabled(true);
-            AnimationDrawable animationDrawable = (AnimationDrawable)catView.getDrawable();
+            AnimationDrawable animationDrawable = (AnimationDrawable) catView.getDrawable();
             animationDrawable.stop();
         } else {
             start_text.setText("运行中");
             start_text.setEnabled(false);
-            AnimationDrawable animationDrawable = (AnimationDrawable)catView.getDrawable();
+            AnimationDrawable animationDrawable = (AnimationDrawable) catView.getDrawable();
             animationDrawable.start();
         }
         Boolean isFirstIn = PrefsUtil.loadPrefBoolean("FIRST_IN", true);
-        if(isFirstIn)
-        {
+        if (isFirstIn) {
             dialog = new ServiceAlertDialog(MainActivity.this);
-            PrefsUtil.savePrefBoolean("FIRST_IN",false);
+            PrefsUtil.savePrefBoolean("FIRST_IN", false);
         }
 
         //开启百度统计

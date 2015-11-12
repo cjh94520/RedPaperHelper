@@ -23,8 +23,8 @@ public class ServiceAlertDialog {
     private AlertDialog dialog;
     private TextView titleView;
     private Button startButton;
-    public ServiceAlertDialog(Context context)
-    {
+
+    public ServiceAlertDialog(Context context) {
         //
         mContext = context;
         dialog = new AlertDialog.Builder(context).create();
@@ -32,27 +32,32 @@ public class ServiceAlertDialog {
         Window window = dialog.getWindow();
         window.setContentView(R.layout.dialog);
 
-        startButton = (Button)window.findViewById(R.id.dialog_start);
+        startButton = (Button) window.findViewById(R.id.dialog_start);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-                dismiss();
+                try {
+                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(intent);
+                    dismiss();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
 
         //修改相关文字的颜色
-        titleView = (TextView)window.findViewById(R.id.dialog_title);
+        titleView = (TextView) window.findViewById(R.id.dialog_title);
         SpannableStringBuilder builder = new SpannableStringBuilder(titleView.getText().toString());
         ForegroundColorSpan redSpan = new ForegroundColorSpan(Color.RED);
-        builder.setSpan(redSpan,4,8, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.setSpan(redSpan, 4, 8, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         titleView.setText(builder);
 
     }
 
-    public void dismiss()
-    {
+    public void dismiss() {
         dialog.dismiss();
     }
 }

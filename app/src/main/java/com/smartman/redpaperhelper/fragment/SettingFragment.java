@@ -44,9 +44,8 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
         boolean isOnService = AccessibilityServiceUtil.isAccessibilitySettingsOn(getActivity());
         switchPreference = (SwitchPreference) findPreference("robpaper");
         boolean isRob = PrefsUtil.getPref().getBoolean("robpaper", false);
-        if( ! (isOnService == isRob)  )
-        {
-            notGoSetting  = true;
+        if (!(isOnService == isRob)) {
+            notGoSetting = true;
             switchPreference.setChecked(isOnService);
         }
     }
@@ -68,11 +67,16 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case "robpaper":
-                if( notGoSetting == false) {
+                if (notGoSetting == false) {
                     //跳到辅助功能
-                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-                }
-                else {
+                    try {
+                        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
                     notGoSetting = false;
                 }
                 break;

@@ -73,7 +73,6 @@ public class RobPaperService extends AccessibilityService {
                             km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
                             //得到键盘锁管理器对象
                             boolean flag = km.isKeyguardLocked();
-                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
                             if (flag == true) {
                                 openKeyGuard(event);
                             } else {
@@ -89,14 +88,9 @@ public class RobPaperService extends AccessibilityService {
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:    //进入微信界面
                 if (isFromNotification) {
                     String className = event.getClassName().toString();
-                    Log.i(TAG, className);
                     if (className.equals("com.tencent.mm.ui.LauncherUI")) {
                         if (isNotFromMoneyDetail) {
-                            //抢
-                            Log.i(TAG, "开始抢红包咯");
-                            boolean flag = km.isKeyguardLocked();
-                            Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
-                            //getPacket();
+                            ;
                         } else {
                             isNotFromMoneyDetail = true;
                             isFromNotification = false;
@@ -119,7 +113,6 @@ public class RobPaperService extends AccessibilityService {
         kl = km.newKeyguardLock("unLock");
         kl.disableKeyguard();
         boolean flag = km.isKeyguardLocked();
-        Log.i(TAG, "现在锁屏状态是: " + String.valueOf(flag));
         isFromNotification = true;
         gotoWeCharUI(event);
 
@@ -162,9 +155,6 @@ public class RobPaperService extends AccessibilityService {
     }
 
     private void getPacket() {
-        Log.i(TAG, "getPacket()被调用");
-        boolean flag = km.isKeyguardLocked();
-        Log.i(TAG, "getPacket()被调用,现在锁屏状态是: " + String.valueOf(flag));
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         if (rootNode == null) {
             TimerTask task = new TimerTask() {
@@ -183,7 +173,6 @@ public class RobPaperService extends AccessibilityService {
             List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
             if (tempList != null && tempList.size() != 0) {
                 tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                Log.i(TAG, "click is ok");
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
@@ -220,9 +209,7 @@ public class RobPaperService extends AccessibilityService {
 
     private void openPacket() {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-        Log.i(TAG, "nodeInfo: " + String.valueOf(nodeInfo == null));
         if (nodeInfo != null) {
-            Log.i(TAG, "nodeInfo: nodeInfo != null");
             List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("拆红包");
             if (list != null && list.size() != 0) {
                 list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -250,8 +237,6 @@ public class RobPaperService extends AccessibilityService {
         List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByText("的红包");
         int end_index = personInfo.get(0).getText().toString().indexOf("的红包", 0);
         person = personInfo.get(0).getText().toString().substring(0, end_index);
-
-        Log.i(TAG, "谁的红包：" + person);
 
         if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
             thanksString += "@" + person;
