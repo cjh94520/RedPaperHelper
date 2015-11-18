@@ -58,14 +58,9 @@ public class MainActivity extends Activity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
             }
         });
 
@@ -83,7 +78,6 @@ public class MainActivity extends Activity {
         helpView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dialog = new ServiceAlertDialog(MainActivity.this);
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, HelpActivity.class);
                 startActivity(intent);

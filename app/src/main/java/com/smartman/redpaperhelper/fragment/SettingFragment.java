@@ -69,13 +69,9 @@ public class SettingFragment extends PreferenceFragment implements SharedPrefere
             case "robpaper":
                 if (notGoSetting == false) {
                     //跳到辅助功能
-                    try {
-                        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    startActivity(intent);
                 } else {
                     notGoSetting = false;
                 }

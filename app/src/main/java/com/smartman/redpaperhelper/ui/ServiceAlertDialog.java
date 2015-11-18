@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.smartman.redpaperhelper.R;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * Created by jiahui.chen on 2015/10/27.
  */
@@ -36,14 +39,9 @@ public class ServiceAlertDialog {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
-                    dismiss();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                mContext.startActivity(intent);
             }
         });
 

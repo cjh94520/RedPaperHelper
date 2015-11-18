@@ -8,8 +8,8 @@ android {
         applicationId "com.smartman.redpaperhelper"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.2"
     }
     buildTypes {
         release {
@@ -62,6 +62,10 @@ android {
 
         meizu {
             manifestPlaceholders = [CHANNEL_VALUE: "魅族"]
+        }
+
+        anzhi {
+            manifestPlaceholders = [CHANNEL_VALUE: "安智市场"]
         }
 
         jifeng {
