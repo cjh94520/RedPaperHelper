@@ -37,8 +37,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //小米自动更新sdk
-        XiaomiUpdateAgent.update(this);
 
         setContentView(R.layout.activity_main);
         bottomView = (ImageView) findViewById(R.id.bottom);

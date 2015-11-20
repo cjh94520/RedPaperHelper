@@ -8,8 +8,8 @@ android {
         applicationId "com.smartman.redpaperhelper"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.5"
     }
     buildTypes {
         release {
@@ -81,5 +81,4 @@ dependencies {
     compile files('libs/android_api_3.7.1.1.jar')
     compile 'com.android.support:percent:22.2.0'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
-    compile files('libs/xiaomi_sdk.jar')
 }
