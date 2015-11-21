@@ -91,6 +91,7 @@
                 android:alpha="0.8"
                 android:text="欢迎通过以下邮箱向我们留言："/>
             <TextView
+                android:autoLink="email"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

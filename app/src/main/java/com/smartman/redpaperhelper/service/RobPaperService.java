@@ -37,6 +37,7 @@ import java.util.TimerTask;
 public class RobPaperService extends AccessibilityService {
 
     public static final String TAG = "RobPaperService";
+
     public ClipboardManager clipboard;
     public boolean isNotFromMoneyDetail = true;
     public boolean isFromNotification = false;
@@ -73,10 +74,10 @@ public class RobPaperService extends AccessibilityService {
                             km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
                             //得到键盘锁管理器对象
                             boolean flag = km.isKeyguardLocked();
+                            isFromNotification = true;
                             if (flag == true) {
                                 openKeyGuard(event);
                             } else {
-                                isFromNotification = true;
                                 gotoWeCharUI(event);
                             }
 
@@ -89,9 +90,7 @@ public class RobPaperService extends AccessibilityService {
                 if (isFromNotification) {
                     String className = event.getClassName().toString();
                     if (className.equals("com.tencent.mm.ui.LauncherUI")) {
-                        if (isNotFromMoneyDetail) {
-                            ;
-                        } else {
+                        if (!isNotFromMoneyDetail) {
                             isNotFromMoneyDetail = true;
                             isFromNotification = false;
                             replyThanksWords();
@@ -108,12 +107,11 @@ public class RobPaperService extends AccessibilityService {
 
     }
 
+    //关闭锁屏
     private void openKeyGuard(AccessibilityEvent tempEvent) {
         final AccessibilityEvent event = tempEvent;
         kl = km.newKeyguardLock("unLock");
         kl.disableKeyguard();
-        boolean flag = km.isKeyguardLocked();
-        isFromNotification = true;
         gotoWeCharUI(event);
 
     }
@@ -147,7 +145,6 @@ public class RobPaperService extends AccessibilityService {
             try {
                 pendingIntent.send(); //点击通知栏信息
                 getPacket();
-
             } catch (PendingIntent.CanceledException ex) {
                 ex.printStackTrace();
             }
@@ -163,13 +160,12 @@ public class RobPaperService extends AccessibilityService {
                     getPacket();
                 }
             };
-            Log.i(TAG, "timer1开启");
             Timer timer = new Timer(true);
             timer.schedule(task, 400);
             return;
         }
 
-        //这里写上误入总聊天界面的代码！！！！
+            //这里写上锁屏状态进入总聊天界面的代码！！！！
             List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
             if (tempList != null && tempList.size() != 0) {
                 tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -199,8 +195,6 @@ public class RobPaperService extends AccessibilityService {
                     getPacket();
                 }
             };
-
-            Log.i(TAG, "timer3开启");
             Timer timer = new Timer(true);
             timer.schedule(task, 400);
             return;
@@ -221,8 +215,6 @@ public class RobPaperService extends AccessibilityService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                List<AccessibilityNodeInfo> closeInfo = nodeInfo.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ayn");
-//                closeInfo.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 PressHomeKey();
             }
         }
@@ -263,10 +255,9 @@ public class RobPaperService extends AccessibilityService {
         isNotFromMoneyDetail = false;
 
         //准备后退
-        List<AccessibilityNodeInfo> backList = PaperDetailInfo.findAccessibilityNodeInfosByText("红包详情");
-        AccessibilityNodeInfo part2 = backList.get(0).getParent();
-        part2.getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
 
+        //发送通知
         sendNotification(person, money);
 
         //导入数据库
@@ -365,12 +356,6 @@ public class RobPaperService extends AccessibilityService {
         this.startActivity(intent);
     }
 
-    private void gotoRecordActivity() {
-        Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClass(getApplicationContext(), RecordActivity.class);
-        startActivity(intent);
-    }
 
     private void sendNotification(String person, String money) {
         int requestCode = (int) System.currentTimeMillis();
@@ -380,7 +365,7 @@ public class RobPaperService extends AccessibilityService {
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setTicker("已经帮你偷来了红包")
-                .setContentTitle("红包神偷展现真正的技术")
+                .setContentTitle("招积红包展现真正的技术")
                 .setContentText("从" + person + "处偷来价值:" + money + "元的红包")
                 .setContentIntent(pendingIntent)
                 .setNumber(1)

@@ -42,6 +42,7 @@ public class ServiceAlertDialog {
                 Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 mContext.startActivity(intent);
+                dismiss();
             }
         });
 
