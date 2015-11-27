@@ -53,6 +53,8 @@ public class RobPaperService extends AccessibilityService {
 
     private AccessibilityNodeInfo target = null;
 
+    private int clickNum = 0;
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         int eventType = event.getEventType();
@@ -144,42 +146,32 @@ public class RobPaperService extends AccessibilityService {
             PendingIntent pendingIntent = notification.contentIntent;
             try {
                 pendingIntent.send(); //点击通知栏信息
-                getPacket();
+                if (km.isKeyguardLocked()) {
+                    Log.i(TAG, "getPacketWithLock");
+                    getPacketWithLock();
+                } else {
+                    Log.i(TAG, "getPacketWithoutLock");
+                    getPacketWithoutLock();
+                }
             } catch (PendingIntent.CanceledException ex) {
                 ex.printStackTrace();
             }
         }
     }
 
-    private void getPacket() {
+    private void getPacketWithoutLock() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         if (rootNode == null) {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    getPacket();
+                    getPacketWithoutLock();
                 }
             };
             Timer timer = new Timer(true);
             timer.schedule(task, 400);
             return;
         }
-
-            //这里写上锁屏状态进入总聊天界面的代码！！！！
-            List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
-            if (tempList != null && tempList.size() != 0) {
-                tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        getPacket();
-                    }
-                };
-                Log.i(TAG, "timer2开启");
-                Timer timer = new Timer(true);
-                timer.schedule(task, 400);
-                return;
-            }
 
         List<AccessibilityNodeInfo> list = rootNode.findAccessibilityNodeInfosByText("领取红包");
         if (list != null && list.size() != 0) {
@@ -192,11 +184,78 @@ public class RobPaperService extends AccessibilityService {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    getPacket();
+                    getPacketWithoutLock();
                 }
             };
             Timer timer = new Timer(true);
             timer.schedule(task, 400);
+            return;
+        }
+    }
+
+    private void getPacketWithLock() {
+        AccessibilityNodeInfo rootNode = getRootInActiveWindow();
+        if (rootNode == null) {
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    getPacketWithLock();
+                }
+            };
+            Timer timer = new Timer(true);
+            Log.i(TAG, "timer1启动");
+            timer.schedule(task, 400);
+            return;
+        }
+
+        //这里写上锁屏状态进入总聊天界面的代码！！！！
+        Log.i(TAG, String.valueOf(clickNum));
+        if (clickNum == 0) {
+            List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
+            if (tempList != null && tempList.size() != 0) {
+                Log.i(TAG, "ACTION_CLICK1");
+                tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                clickNum++;
+                getPacketWithLock();
+                return;
+            } else {
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        getPacketWithLock();
+                    }
+                };
+                Timer timer = new Timer(true);
+                timer.schedule(task, 400);
+                Log.i(TAG, "timer2启动");
+                return;
+            }
+        }
+
+        try {
+            Thread.sleep(400);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        List<AccessibilityNodeInfo> list = rootNode.findAccessibilityNodeInfosByText("领取红包");
+        if (list != null && list.size() != 0) {
+            int size = list.size();
+            AccessibilityNodeInfo info = list.get(size - 1);
+            if (info != null && info.getParent() != null) {
+                Log.i(TAG, "ACTION_CLICK12");
+                clickNum = 0;
+                list.get(list.size() - 1).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+        } else {
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    getPacketWithLock();
+                }
+            };
+            Timer timer = new Timer(true);
+            timer.schedule(task, 400);
+            Log.i(TAG, "timer3启动");
             return;
         }
     }
@@ -304,7 +363,7 @@ public class RobPaperService extends AccessibilityService {
             PressHomeKey();
             wl.release();
             wl = null;
-            if(kl!=null) {
+            if (kl != null) {
                 kl.reenableKeyguard();
                 kl = null;
             }
@@ -339,7 +398,7 @@ public class RobPaperService extends AccessibilityService {
 
             wl.release();
             wl = null;
-            if(kl!=null) {
+            if (kl != null) {
                 kl.reenableKeyguard();
                 kl = null;
             }
