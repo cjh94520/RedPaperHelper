@@ -53,7 +53,9 @@ public class RobPaperService extends AccessibilityService {
 
     private AccessibilityNodeInfo target = null;
 
-    private int clickNum = 0;
+    private int clickNum ;
+
+    private int validNum ;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -145,8 +147,10 @@ public class RobPaperService extends AccessibilityService {
             Notification notification = (Notification) event.getParcelableData();
             PendingIntent pendingIntent = notification.contentIntent;
             try {
+                validNum = 0;
                 pendingIntent.send(); //点击通知栏信息
                 if (km.isKeyguardLocked()) {
+                    clickNum = 0;
                     Log.i(TAG, "getPacketWithLock");
                     getPacketWithLock();
                 } else {
@@ -160,6 +164,10 @@ public class RobPaperService extends AccessibilityService {
     }
 
     private void getPacketWithoutLock() {
+        if(validNum++ >40 )
+        {
+            return;
+        }
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         if (rootNode == null) {
             TimerTask task = new TimerTask() {
@@ -168,8 +176,9 @@ public class RobPaperService extends AccessibilityService {
                     getPacketWithoutLock();
                 }
             };
+            Log.i(TAG, "timer1启动");
             Timer timer = new Timer(true);
-            timer.schedule(task, 400);
+            timer.schedule(task, 300);
             return;
         }
 
@@ -187,13 +196,19 @@ public class RobPaperService extends AccessibilityService {
                     getPacketWithoutLock();
                 }
             };
+            Log.i(TAG, "timer2启动");
             Timer timer = new Timer(true);
-            timer.schedule(task, 400);
+            timer.schedule(task, 200);
             return;
         }
     }
 
     private void getPacketWithLock() {
+        if(validNum++ >40 )
+        {
+            return;
+        }
+
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         if (rootNode == null) {
             TimerTask task = new TimerTask() {
@@ -204,7 +219,7 @@ public class RobPaperService extends AccessibilityService {
             };
             Timer timer = new Timer(true);
             Log.i(TAG, "timer1启动");
-            timer.schedule(task, 400);
+            timer.schedule(task, 200);
             return;
         }
 
@@ -215,7 +230,7 @@ public class RobPaperService extends AccessibilityService {
             if (tempList != null && tempList.size() != 0) {
                 Log.i(TAG, "ACTION_CLICK1");
                 tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                clickNum++;
+                clickNum = 1;
                 getPacketWithLock();
                 return;
             } else {
@@ -226,17 +241,12 @@ public class RobPaperService extends AccessibilityService {
                     }
                 };
                 Timer timer = new Timer(true);
-                timer.schedule(task, 400);
+                timer.schedule(task, 200);
                 Log.i(TAG, "timer2启动");
                 return;
             }
         }
 
-        try {
-            Thread.sleep(400);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         List<AccessibilityNodeInfo> list = rootNode.findAccessibilityNodeInfosByText("领取红包");
         if (list != null && list.size() != 0) {
             int size = list.size();
@@ -254,7 +264,7 @@ public class RobPaperService extends AccessibilityService {
                 }
             };
             Timer timer = new Timer(true);
-            timer.schedule(task, 400);
+            timer.schedule(task, 200);
             Log.i(TAG, "timer3启动");
             return;
         }
@@ -300,9 +310,9 @@ public class RobPaperService extends AccessibilityService {
 
         if (PrefsUtil.loadPrefBoolean("reply_money", false)) {
             if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
-                thanksString += ",谢谢你" + money + "的红包。";
+                thanksString += ",谢谢你" + money + "元的红包。";
             } else {
-                thanksString += "谢谢你" + money + "的红包。";
+                thanksString += "谢谢你" + money + "元的红包。";
             }
         }
 
