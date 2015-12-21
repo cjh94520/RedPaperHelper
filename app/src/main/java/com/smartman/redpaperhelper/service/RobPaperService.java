@@ -76,7 +76,7 @@ public class RobPaperService extends AccessibilityService {
                             //点亮屏幕
 
                             km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                            //得到键盘锁管理器对象
+                            //得到锁管理器对象
                             boolean flag = km.isKeyguardLocked();
                             isFromNotification = true;
                             if (flag == true) {
@@ -178,7 +178,7 @@ public class RobPaperService extends AccessibilityService {
             };
             Log.i(TAG, "timer1启动");
             Timer timer = new Timer(true);
-            timer.schedule(task, 300);
+            timer.schedule(task, 100);
             return;
         }
 
@@ -198,7 +198,7 @@ public class RobPaperService extends AccessibilityService {
             };
             Log.i(TAG, "timer2启动");
             Timer timer = new Timer(true);
-            timer.schedule(task, 200);
+            timer.schedule(task, 100);
             return;
         }
     }
@@ -219,7 +219,7 @@ public class RobPaperService extends AccessibilityService {
             };
             Timer timer = new Timer(true);
             Log.i(TAG, "timer1启动");
-            timer.schedule(task, 200);
+            timer.schedule(task, 100);
             return;
         }
 
@@ -241,7 +241,7 @@ public class RobPaperService extends AccessibilityService {
                     }
                 };
                 Timer timer = new Timer(true);
-                timer.schedule(task, 200);
+                timer.schedule(task, 100);
                 Log.i(TAG, "timer2启动");
                 return;
             }
@@ -264,7 +264,7 @@ public class RobPaperService extends AccessibilityService {
                 }
             };
             Timer timer = new Timer(true);
-            timer.schedule(task, 200);
+            timer.schedule(task, 100);
             Log.i(TAG, "timer3启动");
             return;
         }
