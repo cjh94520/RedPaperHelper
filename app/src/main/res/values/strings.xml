@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">招积红包</string>
     <string name="desc">开启招积红包服务\n抢红包功能才能正常运作</string>
-
+    <string name="desc2">测试服务</string>
     <string name="start">启动服务</string>
 
     <!-- MainActivity -->

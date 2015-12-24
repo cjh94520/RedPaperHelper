@@ -37,7 +37,8 @@ import java.util.TimerTask;
 public class RobPaperService extends AccessibilityService {
 
     public static final String TAG = "RobPaperService";
-
+    public static final String words = "Hello world";
+    public static final String words111 = "Hello world";
     public ClipboardManager clipboard;
     public boolean isNotFromMoneyDetail = true;
     public boolean isFromNotification = false;
@@ -53,9 +54,11 @@ public class RobPaperService extends AccessibilityService {
 
     private AccessibilityNodeInfo target = null;
 
-    private int clickNum ;
+    private int clickNum;
 
-    private int validNum ;
+    private int validNum;
+
+    private int handleNum = 0;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -164,8 +167,7 @@ public class RobPaperService extends AccessibilityService {
     }
 
     private void getPacketWithoutLock() {
-        if(validNum++ >40 )
-        {
+        if (validNum++ > 40) {
             return;
         }
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
@@ -204,8 +206,7 @@ public class RobPaperService extends AccessibilityService {
     }
 
     private void getPacketWithLock() {
-        if(validNum++ >40 )
-        {
+        if (validNum++ > 40) {
             return;
         }
 
@@ -296,6 +297,24 @@ public class RobPaperService extends AccessibilityService {
 
         //抢到谁的红包
         List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByText("的红包");
+        if (personInfo.size() == 0) {
+            handleNum++;
+            if (handleNum <= 20) {
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        handleThanksWords();
+                    }
+                };
+                Timer timer = new Timer(true);
+                timer.schedule(task, 100);
+                Log.i(TAG, "handleThanksWords" + String.valueOf(handleNum) + "启动");
+                return;
+            } else {
+                return;
+            }
+        }
+        handleNum = 0;
         int end_index = personInfo.get(0).getText().toString().indexOf("的红包", 0);
         person = personInfo.get(0).getText().toString().substring(0, end_index);
 
