@@ -297,7 +297,7 @@ public class RobPaperService extends AccessibilityService {
 
         //抢到谁的红包
         List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByText("的红包");
-        if (personInfo.size() == 0) {
+        if ( personInfo==null || personInfo.size() == 0) {
             handleNum++;
             if (handleNum <= 20) {
                 TimerTask task = new TimerTask() {
@@ -311,6 +311,7 @@ public class RobPaperService extends AccessibilityService {
                 Log.i(TAG, "handleThanksWords" + String.valueOf(handleNum) + "启动");
                 return;
             } else {
+                handleNum = 0;
                 return;
             }
         }
