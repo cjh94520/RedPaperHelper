@@ -19,7 +19,6 @@ import com.smartman.redpaperhelper.R;
 import com.smartman.redpaperhelper.ui.ServiceAlertDialog;
 import com.smartman.redpaperhelper.utils.AccessibilityServiceUtil;
 import com.smartman.redpaperhelper.utils.PrefsUtil;
-import com.xiaomi.market.sdk.XiaomiUpdateAgent;
 
 public class MainActivity extends Activity {
 
@@ -141,4 +140,11 @@ public class MainActivity extends Activity {
         StatService.onPause(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AnimationDrawable animationDrawable = (AnimationDrawable) catView.getDrawable();
+        animationDrawable.stop();
+        setView.clearAnimation();
+    }
 }
