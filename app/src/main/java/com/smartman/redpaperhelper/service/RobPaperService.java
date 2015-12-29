@@ -228,7 +228,7 @@ public class RobPaperService extends AccessibilityService {
         Log.i(TAG, String.valueOf(clickNum));
         if (clickNum == 0) {
             List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
-            if (tempList != null && tempList.size() != 0) {
+            if (tempList != null && tempList.size() != 0 && tempList.get(0) != null) {
                 Log.i(TAG, "ACTION_CLICK1");
                 tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 clickNum = 1;
@@ -297,7 +297,7 @@ public class RobPaperService extends AccessibilityService {
 
         //抢到谁的红包
         List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByText("的红包");
-        if ( personInfo==null || personInfo.size() == 0) {
+        if (personInfo == null || personInfo.size() == 0) {
             handleNum++;
             if (handleNum <= 20) {
                 TimerTask task = new TimerTask() {
