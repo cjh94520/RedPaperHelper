@@ -37,8 +37,6 @@ import java.util.TimerTask;
 public class RobPaperService extends AccessibilityService {
 
     public static final String TAG = "RobPaperService";
-    public static final String words = "Hello world";
-    public static final String words111 = "Hello world";
     public ClipboardManager clipboard;
     public boolean isNotFromMoneyDetail = true;
     public boolean isFromNotification = false;
@@ -228,7 +226,7 @@ public class RobPaperService extends AccessibilityService {
         Log.i(TAG, String.valueOf(clickNum));
         if (clickNum == 0) {
             List<AccessibilityNodeInfo> tempList = rootNode.findAccessibilityNodeInfosByText("[微信红包]");
-            if (tempList != null && tempList.size() != 0) {
+            if (tempList != null && tempList.size() != 0 && tempList.get(0)!=null) {
                 Log.i(TAG, "ACTION_CLICK1");
                 tempList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 clickNum = 1;
@@ -297,7 +295,7 @@ public class RobPaperService extends AccessibilityService {
 
         //抢到谁的红包
         List<AccessibilityNodeInfo> personInfo = PaperDetailInfo.findAccessibilityNodeInfosByText("的红包");
-        if ( personInfo==null || personInfo.size() == 0) {
+        if (personInfo == null || personInfo.size() == 0) {
             handleNum++;
             if (handleNum <= 20) {
                 TimerTask task = new TimerTask() {
@@ -326,7 +324,10 @@ public class RobPaperService extends AccessibilityService {
         List<AccessibilityNodeInfo> moneyInfo = PaperDetailInfo.findAccessibilityNodeInfosByText("已存入零钱");
         AccessibilityNodeInfo parent = moneyInfo.get(0).getParent();
 
-        money = parent.getChild(2).getText().toString();
+        money = "";
+        if (parent != null && parent.getChildCount() >= 3) {
+            money = parent.getChild(2).getText().toString();
+        }
 
         if (PrefsUtil.loadPrefBoolean("reply_money", false)) {
             if (PrefsUtil.loadPrefBoolean("reply_person", false)) {
